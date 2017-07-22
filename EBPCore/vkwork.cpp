@@ -117,19 +117,24 @@ void VKW_TrUpdate(json *update);
 void VKW_Loop() {
 	std::string server = longpollinfo.at("response").at("server");
 	char *resp = (char *)Net_Post("https://" + server, params);
-	json respJ = json::parse(resp);
-	if (respJ.find("failed") != respJ.end())
-		return VKW_Start();
+	if (resp!=NULL)
+	{
+		json respJ = json::parse(resp);
+		if (respJ.find("failed") != respJ.end())
+			return VKW_Start();
 
-	int cc = respJ.at("updates").size();
-	if (cc != 0)
-		for (json::iterator it = respJ["updates"].begin(); it != respJ["updates"].end(); ++it) {
-			json update = *it;
-			VKW_TrUpdate(&update);
-		}
-	
-	int ts = respJ.at("ts");
-	params.at("ts") = std::to_string(ts);
+		int cc = respJ.at("updates").size();
+		if (cc != 0)
+			for (json::iterator it = respJ["updates"].begin(); it != respJ["updates"].end(); ++it) {
+				json update = *it;
+				VKW_TrUpdate(&update);
+			}
+
+		int ts = respJ.at("ts");
+		params.at("ts") = std::to_string(ts);
+	}
+	else
+		Console_Error("LongPoll unknow error, reconnect.", "VKW_Loop");
 	VKW_Loop();
 }
 
