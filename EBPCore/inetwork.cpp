@@ -40,6 +40,7 @@ WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data)
 /*
 	Получить ответ сервера
 */
+std::string Utf8_to_cp1251(const char *str);
 std::string Nettest_Command(std::vector<std::string> cmd_args)
 {
 	if (cmd_args.size() != 2) {
@@ -49,7 +50,7 @@ std::string Nettest_Command(std::vector<std::string> cmd_args)
 	if (ret == NULL) {
 		return "NETTEST UNKNOW ERROR";
 	}
-	return (char *)ret;
+	return Utf8_to_cp1251((char *)ret);
 }
 
 void Net_Init() {

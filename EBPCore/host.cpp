@@ -24,10 +24,12 @@ Desc: Init EBPCore
 */
 inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 {
-	setlocale(LC_CTYPE, "rus"); // вызов функции настройки локали
+	setlocale(LC_CTYPE, "Russian");
+	system("chcp 65001");
+	 // вызов функции настройки локали
 
 	api_output = api;
-	Console_Log("Кириллица Initialization EBotPlatform "+GetVersionName(), "Core:Host_Main");
+	Console_Log("Initialization EBotPlatform "+GetVersionName(), "Core:Host_Main");
 	FS_Init(botname);
 	Cmd_Init();
 	Net_Init();

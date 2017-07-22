@@ -81,13 +81,11 @@ std::string VK_Send(int vkrid) {
 	return VK_Send(vkr.method, vkr.params, vkr.sendtoken);
 }
 
-extern void fix_utf8_string(std::string& str);
 std::string VK_Send(std::string method, std::map<std::string, std::string> params, bool sendtoken) {
 	if (sendtoken)
 		params["access_token"] = Cvar_GetValue("vk_token");
 	params["v"] = Cvar_GetValue("vk_version");
 	std::string str = (char *)(Net_Post("https://api.vk.com/method/" + method, params));
-	fix_utf8_string(str);
 	return str;
 }
 

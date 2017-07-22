@@ -5,3 +5,11 @@
 *.db-wal
 *.tlog
 *.obj
+*.opendb
+.vs/EBotPlatform/v15/.suo
+*.pdb
+*.log
+*.lib
+*.exp
+*.idb
+.vs/EBotPlatform/v15/.suo
