@@ -32,7 +32,7 @@ lua_State* LuaScript;
 void UL_Init()
 {
 	Console_Log("Initialization UserLogic...", "Core:UL_Init");
-	Cmd_AddCommand("re", ReUL_Command, "Reload UserLogic");
+	Cmd_AddCommand("relua", ReUL_Command, "Reload UserLogic");
 	Cvar_AddCvar("dll_path", "scripts/main.lua", "Path to DLL");
 }
 
