@@ -25,8 +25,8 @@ using namespace luabridge;
 
 
 std::string ReUL_Command(std::vector<std::string> cmd_args);
-// DLL
-typedef void(*pfnInit)(core_api api);
+void UL_Free();
+
 lua_State* LuaScript;
 
 void UL_Init()
@@ -39,7 +39,7 @@ void UL_Init()
 /*
 Команда перезагрузки UserLogic
 */
-void UL_RegisterAPI(lua_State* LuaScript);
+void UL_RegisterAPI();
 void UL_LogError(luabridge::LuaException error);
 void UL_Start() {
 	try {
@@ -47,7 +47,8 @@ void UL_Start() {
 		// Load
 		LuaScript = luabridge::luaL_newstate();
 		luaL_openlibs(LuaScript);
-		UL_RegisterAPI(LuaScript);
+		UL_RegisterAPI();
+		lua_checkstack(LuaScript, 2048);
 		luaL_dofile(LuaScript, ("bot/" + Cvar_GetValue("dll_path")).c_str());
 		lua_pcall(LuaScript, 0, 0, 0);
 		UL_Call("Main");
@@ -71,6 +72,10 @@ void UL_Call(std::string method)
 
 void UL_CallEvent(std::string method, int sid)
 {
+	while (LuaScript == NULL)
+	{
+		Sleep(100);
+	}
 	lua_State* state = lua_newthread(LuaScript);
 	try {
 		luabridge::LuaRef func = luabridge::getGlobal(state, method.c_str());
@@ -80,10 +85,11 @@ void UL_CallEvent(std::string method, int sid)
 	catch (luabridge::LuaException const& e) {
 		UL_LogError(e);
 	}
-	state = NULL;
+	lua_gc(LuaScript, LUA_GCCOLLECT, 0);
 }
 
 void UL_Free() {
+	lua_close(LuaScript);
 }
 
 void UL_LogError(luabridge::LuaException error) {

@@ -13,3 +13,5 @@
 *.exp
 *.idb
 .vs/EBotPlatform/v15/.suo
+*.enc
+*.enc
