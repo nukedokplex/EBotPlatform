@@ -69,9 +69,11 @@ void UL_RegisterAPI(luabridge::lua_State* LuaScript)
 		.endNamespace();*/
 	// Network
 	luabridge::getGlobalNamespace(LuaScript)
-	.beginNamespace("network")
+	.beginNamespace("net")
 		.addFunction("get", Net_Get)
-		.addFunction("post", Net_Post)
+		.addFunction("create", Net_CreatePost)
+		.addFunction("set", Net_SetParam)
+		.addFunction("send", Net_Send)
 	.endNamespace();
 	// VKWORK
 	luabridge::getGlobalNamespace(LuaScript)

@@ -12,6 +12,12 @@ struct MemoryStruct {
 	size_t size;
 };
 
+struct PostRequest {
+	std::string url;
+	std::map<std::string, std::string> params;
+};
+
+std::map<int, PostRequest> prs;
 
 void *myrealloc(void *ptr, size_t size)
 {
@@ -114,4 +120,32 @@ void *Net_Post(std::string url, std::map<std::string, std::string> params) {
 		return chunk.memory;
 	}
 	return NULL;
+}
+
+
+// Helper Lua
+int Net_RegisterPR(PostRequest pr) {
+	int i = 0;
+	while (prs.find(i) != prs.end())
+		i++;
+	prs[i] = pr;
+	return i;
+}
+
+int Net_CreatePost(std::string url)
+{
+	PostRequest pr = PostRequest();
+	pr.url = url;
+	return Net_RegisterPR(pr);
+}
+
+std::string cp1251_to_Utf8(const char *str);
+void Net_SetParam(int prid, std::string p_name, std::string p_value) {
+	prs[prid].params[p_name] = cp1251_to_Utf8(p_value.c_str());
+}
+
+std::string Net_Send(int prid) {
+	PostRequest pr = prs[prid];
+	prs.erase(prid);
+	return Utf8_to_cp1251((char *)Net_Post(pr.url, pr.params));
 }
