@@ -7,6 +7,7 @@
 #include "userlogic.h"
 
 std::map<std::string, std::string> events;
+std::map<std::string, bool> lock;
 
 std::vector<void*> stack;
 int it = 0;
@@ -62,12 +63,15 @@ void Event_Flush()
 void Event_Register (std::string name, std::string func)
 {
 	events[name] = func;
+	lock[name] = false;
 }
 
 void Event_Call (std::string name)
 {
 	if (events.find(name) == events.end())
 		return;
+	while (lock[name]) {}
+	lock[name] = true;
 	UL_Call(events.find(name)->second);
-	Event_Flush();
+	lock[name] = false;
 }
