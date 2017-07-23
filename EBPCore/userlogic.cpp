@@ -60,7 +60,7 @@ void UL_Start() {
 void UL_Call(std::string method)
 {
 	try {
-		getGlobal(LuaScript, method.c_str())();
+		luabridge::getGlobal(LuaScript, method.c_str())();
 	}
 	catch (luabridge::LuaException const& e) {
 		UL_LogError(e);
