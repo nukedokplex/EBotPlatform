@@ -60,6 +60,9 @@
     <ClCompile Include="events.cpp">
       <Filter>Файлы исходного кода\userlogic</Filter>
     </ClCompile>
+    <ClCompile Include="userlogic_api.cpp">
+      <Filter>Файлы исходного кода\userlogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console.h">

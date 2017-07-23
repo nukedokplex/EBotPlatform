@@ -13,76 +13,66 @@
 #include <cstdlib> // для system
 #include <windows.h>
 #include <iostream>
+#include <LuaBridge.h>
+
+extern "C" {
+# include "lua.h"
+# include "lauxlib.h"
+# include "lualib.h"
+}
+
+using namespace luabridge;
+
 
 std::string ReUL_Command(std::vector<std::string> cmd_args);
 // DLL
 typedef void(*pfnInit)(core_api api);
-HINSTANCE ul_dll;
-core_api core = {
-	// CMD
-	Cmd_ExeConfig,
-	Cmd_AddCommand,
-	Cmd_Exists,
-	Cmd_ExeCommand,
-	Cmd_ParseArgs,
-	// Console
-	Console_Log,
-	Console_Error,
-	// Cvar
-	Cvar_Exists,
-	Cvar_SetValue,
-	Cvar_AddCvar,
-	Cvar_GetValue,
-	// Events
-	Event_Register,
-	Event_Call,
-	// Filesystem
-	FS_Exists,
-	FS_GetRootPath,
-	FS_GetFullPath,
-	FS_OpenFile,
-	// Network
-	Net_Get,
-	Net_Post,
-	// VKWORK
-	VK_CreateRequest,
-	VK_SetParam,
-	VK_Send,
-	VK_SendOff,
-	VK_Send
-};
+lua_State* LuaScript;
 
 void UL_Init()
 {
 	Console_Log("Initialization UserLogic...", "Core:UL_Init");
 	Cmd_AddCommand("re", ReUL_Command, "Reload UserLogic");
-	Cvar_AddCvar("dll_path", "bin/bin.dll", "Path to DLL");
+	Cvar_AddCvar("dll_path", "scripts/main.lua", "Path to DLL");
 }
 
 /*
 Команда перезагрузки UserLogic
 */
+void UL_RegisterAPI(lua_State* LuaScript);
+void UL_LogError(luabridge::LuaException error);
 void UL_Start() {
-	Console_Log("Start UL in \""+ Cvar_GetValue("dll_path") +"\"", "Core:UL_Start");
-	ul_dll = LoadLibrary(("bot/"+Cvar_GetValue("dll_path")).c_str());
-	if (ul_dll == NULL) {
-		Console_Error(Cvar_GetValue("dll_path") + " NOT LOADED", "Core:UL_Start");
-		return;
+	try {
+		Console_Log("Start UL in \"" + Cvar_GetValue("dll_path") + "\"", "Core:UL_Start");
+		// Load
+		LuaScript = luabridge::luaL_newstate();
+		luaL_openlibs(LuaScript);
+		UL_RegisterAPI(LuaScript);
+		luaL_dofile(LuaScript, ("bot/" + Cvar_GetValue("dll_path")).c_str());
+		lua_pcall(LuaScript, 0, 0, 0);
+		UL_Call("Main");
 	}
-	pfnInit Host_Main = (pfnInit)GetProcAddress(ul_dll, "Host_Main");
-	if (Host_Main == NULL) {
-		Console_Error(Cvar_GetValue("dll_path") + " IS BAD", "Core:UL_Start");
-		return;
+	catch (luabridge::LuaException const& e) {
+		UL_LogError(e);
 	}
-//	Host_Main(core);
+}
+
+void UL_Call(std::string method)
+{
+	try {
+		getGlobal(LuaScript, method.c_str())();
+	}
+	catch (luabridge::LuaException const& e) {
+		UL_LogError(e);
+	}
 }
 
 void UL_Free() {
 }
 
-//void UL_LogError(_EXCEPTION_ error) {
-
-//}
+void UL_LogError(luabridge::LuaException error) {
+	Console_Error(error.what(), "Lua");
+}
 
 std::string ReUL_Command(std::vector<std::string> cmd_args)
 {
