@@ -9,6 +9,7 @@
 #include "vkwork.h"
 #include "../common/b_api.h"
 #include "events.h"
+#include "utils.h"
 // --
 #include <LuaBridge.h>
 
@@ -83,6 +84,16 @@ void UL_RegisterAPI(luabridge::lua_State* LuaScript)
 		.addFunction("send", (std::string(*)(int))VK_Send)
 		.addFunction("send_off", VK_SendOff)
 	.endNamespace();
+	// Flags
+	luabridge::getGlobalNamespace(LuaScript)
+		.beginNamespace("flag")
+		.addFunction("is", Flags_IsFlag)
+		.addFunction("add", Flags_AddFlag)
+		.addFunction("remove", Flags_RemoveFlag)
+	.endNamespace();
+	// Other
+	luabridge::getGlobalNamespace(LuaScript)
+		.addFunction("changeCharset", Charset_Change);
 }
 
 // API \\
