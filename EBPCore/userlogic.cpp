@@ -28,6 +28,7 @@ std::string ReUL_Command(std::vector<std::string> cmd_args);
 void UL_Free();
 
 lua_State* LuaScript;
+bool LuaRun;
 
 void UL_Init()
 {
@@ -51,6 +52,7 @@ void UL_Start() {
 		lua_checkstack(LuaScript, 2048);
 		luaL_dofile(LuaScript, ("bot/" + Cvar_GetValue("dll_path")).c_str());
 		lua_pcall(LuaScript, 0, 0, 0);
+		LuaRun = true;
 		UL_Call("Main");
 	}
 	catch (luabridge::LuaException const& e) {
@@ -60,6 +62,10 @@ void UL_Start() {
 
 void UL_Call(std::string method)
 {
+	while (!LuaRun)
+	{
+		Sleep(100);
+	}
 	try {
 		luabridge::LuaRef func = luabridge::getGlobal(LuaScript, method.c_str());
 		if (func.isFunction())
@@ -72,7 +78,7 @@ void UL_Call(std::string method)
 
 void UL_CallEvent(std::string method, int sid)
 {
-	while (LuaScript == NULL)
+	while (!LuaRun)
 	{
 		Sleep(100);
 	}
@@ -89,6 +95,7 @@ void UL_CallEvent(std::string method, int sid)
 }
 
 void UL_Free() {
+	LuaRun = false;
 	lua_close(LuaScript);
 }
 
