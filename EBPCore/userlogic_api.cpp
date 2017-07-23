@@ -19,8 +19,11 @@ extern "C" {
 # include "lualib.h"
 }
 
+extern luabridge::lua_State* LuaScript;
 
-void UL_RegisterAPI(luabridge::lua_State* LuaScript)
+luabridge::LuaRef API_Cmd_ParseArgs(std::string text);
+
+void UL_RegisterAPI()
 {
 	// CMD
 	luabridge::getGlobalNamespace(LuaScript)
@@ -29,7 +32,7 @@ void UL_RegisterAPI(luabridge::lua_State* LuaScript)
 		//.addFunction("add", Cmd_AddCommand); -- TODO add Lua functions
 		.addFunction("exists", Cmd_Exists)
 		.addFunction("exec", Cmd_ExeCommand)
-		.addFunction("parse", Cmd_ParseArgs)
+		.addFunction("parse", API_Cmd_ParseArgs)
 	.endNamespace();
 
 	// Consoló
@@ -99,6 +102,10 @@ void UL_RegisterAPI(luabridge::lua_State* LuaScript)
 // API \\
 
 // Console
-void UL_API_Console_Log(std::string& text, std::string& type) {
-	Console_Log(text, type);
+luabridge::LuaRef API_Cmd_ParseArgs(std::string text) {
+	std::vector<std::string> or = Cmd_ParseArgs(text);
+	luabridge::LuaRef r = luabridge::newTable(LuaScript);
+	for (int i = 0;i < or.size();i++)
+		r[i+1] = (std::string)or[i];
+	return r;
 }
