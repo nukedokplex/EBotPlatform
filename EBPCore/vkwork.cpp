@@ -148,116 +148,148 @@ void VKW_TrUpdate(json *update) {
 
 //Code: 1
 void VKW_Tr_ReplaceMessageFlags(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_flags_replace");
+	if (!Event_Exists("vk_flags_replace"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_flags_replace", eid);
 }
 //Code: 2
 void VKW_Tr_SetMessageFlags(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_message_set");
+	if (!Event_Exists("vk_message_set"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_message_set", eid);
 }
 //Code: 3
 void VKW_Tr_FlushMessageFlags(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_flags_remove");
+	if (!Event_Exists("vk_flags_remove"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_flags_remove", eid);
 }
 //Code: 4
 void VKW_Tr_NewMessage(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_message");
+	if (!Event_Exists("vk_message"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_message", eid);
 }
 //Code: 6
 void VKW_Tr_ReadInMessage(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_messages_read_in");
+	if (!Event_Exists("vk_messages_read_in"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_messages_read_in", eid);
 }
 //Code: 7
 void VKW_Tr_ReadOutMessage(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_messages_read_out");
+	if (!Event_Exists("vk_messages_read_out"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_messages_read_out", eid);
 }
 //Code: 8
 void VKW_Tr_WasOnline(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_PushInt(update.at(3));
-	Event_Call("vk_was_online");
+	if (!Event_Exists("vk_was_online"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_PushInt(eid,update.at(3));
+	Event_Call("vk_was_online", eid);
 }
 //Code: 9
 void VKW_Tr_WasOffline(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_PushInt(update.at(3));
-	Event_Call("vk_was_offline");
+	if (!Event_Exists("vk_was_offline"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_PushInt(eid,update.at(3));
+	Event_Call("vk_was_offline", eid);
 }
 //Code: 10
 void VKW_Tr_FlushDialogFlags(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_dialog_flags_remove");
+	if (!Event_Exists("vk_dialog_flags_remove"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_dialog_flags_remove", eid);
 }
 //Code: 11
 void VKW_Tr_ReplaceDialogFlags(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_dialog_flags_replace");
+	if (!Event_Exists("vk_dialog_flags_replace"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_dialog_flags_replace", eid);
 }
 //Code: 12
 void VKW_Tr_SetDialogFlags(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_dialog_flags_set");
+	if (!Event_Exists("vk_dialog_flags_set"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_dialog_flags_set", eid);
 }
 //Code: 51
 void VKW_Tr_ChatEdited(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_chat_edit");
+	if (!Event_Exists("vk_chat_edit"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_chat_edit", eid);
 }
 //Code: 61
 void VKW_Tr_TypingDialog(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_typing");
+	if (!Event_Exists("vk_typing"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_typing", eid);
 }
 //Code: 62
 void VKW_Tr_TypingChat(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_typing_chat");
+	if (!Event_Exists("vk_typing_chat"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_typing_chat", eid);
 }
 //Code: 80
 void VKW_Tr_EditUnreadCount(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_Call("vk_unread_edit");
+	if (!Event_Exists("vk_unread_edit"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_Call("vk_unread_edit", eid);
 }
 //Code: 114
 void VKW_Tr_EditNotifyChat(json update) {
-	Event_Flush();
-	Event_PushInt(update.at(1));
-	Event_PushInt(update.at(2));
-	Event_PushInt(update.at(3));
-	Event_Call("vk_notify_edit");
+	if (!Event_Exists("vk_notify_edit"))
+		return;
+	int eid = Event_New();
+	Event_PushInt(eid, update.at(1));
+	Event_PushInt(eid, update.at(2));
+	Event_PushInt(eid, update.at(3));
+	Event_Call("vk_notify_edit", eid);
 }

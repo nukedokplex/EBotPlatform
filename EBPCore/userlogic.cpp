@@ -69,6 +69,20 @@ void UL_Call(std::string method)
 	}
 }
 
+void UL_CallEvent(std::string method, int sid)
+{
+	lua_State* state = lua_newthread(LuaScript);
+	try {
+		luabridge::LuaRef func = luabridge::getGlobal(state, method.c_str());
+		if (func.isFunction())
+			func(sid);
+	}
+	catch (luabridge::LuaException const& e) {
+		UL_LogError(e);
+	}
+	state = NULL;
+}
+
 void UL_Free() {
 }
 
