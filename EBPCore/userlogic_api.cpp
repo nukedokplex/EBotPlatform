@@ -96,6 +96,11 @@ void UL_RegisterAPI()
 		.addFunction("add", Flags_AddFlag)
 		.addFunction("remove", Flags_RemoveFlag)
 	.endNamespace();
+	// Regular
+	luabridge::getGlobalNamespace(LuaScript)
+		.beginNamespace("reg")
+		.addFunction("replace", utils::regular::replace)
+	.endNamespace();
 	// Other
 	luabridge::getGlobalNamespace(LuaScript)
 		.addFunction("changeCharset", Charset_Change);

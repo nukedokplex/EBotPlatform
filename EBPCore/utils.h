@@ -8,3 +8,11 @@ int Flags_AddFlag(int flags, int flag);
 int Flags_RemoveFlag(int flags, int flag);
 
 std::string Charset_Change(std::string str, int from, int to);
+
+namespace utils
+{
+	namespace regular
+	{
+		std::string replace(std::string text, std::string pattern, std::string to);
+	}
+}
