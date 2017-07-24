@@ -8,6 +8,7 @@
 #include "vkwork.h"
 #include "userlogic.h"
 #include "longpoll.h"
+#include "mysql.h"
 
 inputApi api_input = {
 	console::log,
@@ -35,9 +36,11 @@ inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 	Net_Init();
 	VK_Init();
 	UL_Init();
+	mysql::utils::init();
 
 	Cmd_ExeConfig("config.cfg");
 
+	mysql::utils::start();
 	UL_Start();
 	longpoll::start();
 
