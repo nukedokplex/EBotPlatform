@@ -22,6 +22,7 @@ extern "C" {
 extern luabridge::lua_State* LuaScript;
 
 luabridge::LuaRef API_Cmd_ParseArgs(std::string text);
+std::string API_Net_Get(std::string url);
 
 void UL_RegisterAPI()
 {
@@ -74,18 +75,19 @@ void UL_RegisterAPI()
 	// Network
 	luabridge::getGlobalNamespace(LuaScript)
 	.beginNamespace("net")
-		.addFunction("get", Net_Get)
+		.addFunction("get", API_Net_Get)
 		.addFunction("create", Net_CreatePost)
 		.addFunction("set", Net_SetParam)
 		.addFunction("send", Net_Send)
 	.endNamespace();
 	// VKWORK
 	luabridge::getGlobalNamespace(LuaScript)
-	.beginNamespace("vk")
+		.beginNamespace("vk")
 		.addFunction("create", VK_CreateRequest)
 		.addFunction("set", VK_SetParam)
 		.addFunction("send", (std::string(*)(int))VK_Send)
 		.addFunction("send_off", VK_SendOff)
+		.addFunction("getToken", VK_GetToken)
 	.endNamespace();
 	// Flags
 	luabridge::getGlobalNamespace(LuaScript)
@@ -108,4 +110,9 @@ luabridge::LuaRef API_Cmd_ParseArgs(std::string text) {
 	for (int i = 0;i < or.size();i++)
 		r[i+1] = (std::string)or[i];
 	return r;
+}
+
+std::string API_Net_Get(std::string url)
+{
+	return (std::string)(char*)Net_Get(url);
 }
