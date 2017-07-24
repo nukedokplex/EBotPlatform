@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <thread>
 #include <vector>
 #include "events.h"
 #include "userlogic.h"
@@ -84,10 +85,7 @@ void Event_Call (std::string name, int stack_id)
 {
 	if (events.find(name) != events.end())
 	{
-		//while (lock[name]) { Sleep(100); }
-		//lock[name] = true;
 		UL_CallEvent(events.find(name)->second, stack_id);
-		//lock[name] = false;
 	}
 	Event_Flush(stack_id);
 }
