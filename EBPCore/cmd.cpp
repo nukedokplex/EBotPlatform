@@ -77,6 +77,8 @@ void Cmd_AddCommand(const std::string cmd_name, xcommand_t function, const std::
 */
 std::string Cmd_ExeCommand(std::string text)
 {
+	if (text == "")
+		return "";
 	std::vector<std::string> cmd_args = Cmd_ParseArgs(text);
 	// check functions
 	if (Cmd_Exists(cmd_args[0]))
