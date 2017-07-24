@@ -34,7 +34,7 @@ void UL_Init()
 {
 	console::log("Initialization UserLogic...", "Core:UL_Init");
 	Cmd_AddCommand("relua", ReUL_Command, "Reload UserLogic");
-	Cvar_AddCvar("dll_path", "scripts/main.lua", "Path to DLL");
+	cvar::add("dll_path", "scripts/main.lua", "Path to DLL");
 }
 
 /*
@@ -44,13 +44,13 @@ void UL_RegisterAPI();
 void UL_LogError(luabridge::LuaException error);
 void UL_Start() {
 	try {
-		console::log("Start UL in \"" + Cvar_GetValue("dll_path") + "\"", "Core:UL_Start");
+		console::log("Start UL in \"" + cvar::get("dll_path") + "\"", "Core:UL_Start");
 		// Load
 		LuaScript = luabridge::luaL_newstate();
 		luaL_openlibs(LuaScript);
 		UL_RegisterAPI();
 		lua_checkstack(LuaScript, 2048);
-		luaL_dofile(LuaScript, ("bot/" + Cvar_GetValue("dll_path")).c_str());
+		luaL_dofile(LuaScript, ("bot/" + cvar::get("dll_path")).c_str());
 		lua_pcall(LuaScript, 0, 0, 0);
 		LuaRun = true;
 		UL_Call("Main");

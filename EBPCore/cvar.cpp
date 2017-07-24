@@ -4,17 +4,11 @@
 #include "cmd.h"
 #include <map>
 #include <vector>
-
-struct cvar_s
-{
-	std::string name;
-	std::string value;
-	std::string desc;
-};
+using namespace cvar;
 
 std::map<std::string, cvar_s> cvars;
 
-bool Cvar_Exists(const std::string cvar_name)
+bool cvar::exists(const std::string cvar_name)
 {
 	return cvars.find(cvar_name) != cvars.end();
 }
@@ -25,7 +19,7 @@ bool Cvar_Exists(const std::string cvar_name)
 Cmd_AddCommand
 ============
 */
-void Cvar_AddCvar(const std::string cvar_name, std::string value, const std::string cvar_desc)
+void cvar::add(const std::string cvar_name, std::string value, const std::string cvar_desc)
 {
 	cvar_s	cvar;
 
@@ -36,7 +30,7 @@ void Cvar_AddCvar(const std::string cvar_name, std::string value, const std::str
 	}
 
 	// fail if the command already exists
-	if (Cvar_Exists(cvar_name))
+	if (exists(cvar_name))
 	{
 		console::log(cvar_name + " already defined", "Core:Cmd_AddCommand");
 		return;
@@ -50,13 +44,13 @@ void Cvar_AddCvar(const std::string cvar_name, std::string value, const std::str
 }
 
 /*
-Function: Cvar_GetValue
+Function: cvar::get
 Desc: Get value of cvar name
 */
-std::string Cvar_GetValue(const std::string cvar_name)
+std::string cvar::get(const std::string cvar_name)
 {
-	if (!Cvar_Exists(cvar_name)){
-		console::log("Error: cvar \"" + cvar_name + "\" not found", "Core:Cvar_GetValue");
+	if (!exists(cvar_name)){
+		console::log("Error: cvar \"" + cvar_name + "\" not found", "Core:cvar::get");
 		return NULL;
 	}
 	return cvars.find(cvar_name)->second.value;
@@ -65,10 +59,10 @@ std::string Cvar_GetValue(const std::string cvar_name)
 /*
 	Установить значение
 */
-bool Cvar_SetValue(const std::string cvar_name, std::string cvar_value)
+bool cvar::set(const std::string cvar_name, std::string cvar_value)
 {
-	if (!Cvar_Exists(cvar_name)) {
-		console::log("Error: cvar \"" + cvar_name + "\" not found", "Core:Cvar_SetValue");
+	if (!exists(cvar_name)) {
+		console::log("Error: cvar \"" + cvar_name + "\" not found", "Core:cvar::set");
 		return false;
 	}
 	cvars[cvar_name].value = cvar_value;

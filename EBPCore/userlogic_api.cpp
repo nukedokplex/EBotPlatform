@@ -46,10 +46,10 @@ void UL_RegisterAPI()
 	// Cvar
 	luabridge::getGlobalNamespace(LuaScript)
 	.beginNamespace("cvar")
-		.addFunction("exists", Cvar_Exists)
-		.addFunction("set", Cvar_SetValue)
-		.addFunction("add", Cvar_AddCvar)
-		.addFunction("get", Cvar_GetValue)
+		.addFunction("exists", cvar::exists)
+		.addFunction("set", cvar::set)
+		.addFunction("add", cvar::add)
+		.addFunction("get", cvar::get)
 	.endNamespace();
 	// Events
 	luabridge::getGlobalNamespace(LuaScript)

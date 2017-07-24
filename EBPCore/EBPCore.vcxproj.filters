@@ -66,6 +66,12 @@
     <ClCompile Include="longpoll.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="regular.cpp">
+      <Filter>Файлы исходного кода\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="mysql.cpp">
+      <Filter>Файлы исходного кода\userlogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console.h">
@@ -105,6 +111,9 @@
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="longpoll.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="mysql.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

@@ -76,12 +76,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\CProj\EBotPlatform\Source\libs\lua;D:\CProj\EBotPlatform\Source\libs\objectscript-master\src;D:\CProj\EBotPlatform\Source\libs\glib\include\glib-2.0;D:\CProj\EBotPlatform\Source\libs\glib\include\;D:\CProj\EBotPlatform\Source\libs\curl-7.53.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\CProj\EBotPlatform\Source\libs\mysql-connector-c++-noinstall-1.1.9-win32\include;D:\CProj\EBotPlatform\Source\libs\lua;D:\CProj\EBotPlatform\Source\libs\objectscript-master\src;D:\CProj\EBotPlatform\Source\libs\glib\include\glib-2.0;D:\CProj\EBotPlatform\Source\libs\glib\include\;D:\CProj\EBotPlatform\Source\libs\curl-7.53.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>../../../Build/$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>D:\CProj\EBotPlatform\Source\libs\lua;D:\CProj\EBotPlatform\Source\libs\glib\lib;D:\CProj\EBotPlatform\Source\libs\curl-7.53.1\build\lib\Debug;D:\CProj\EBotPlatform\Source\libs\objectscript-master\build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>liblua53.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\CProj\EBotPlatform\Source\libs\mysql-connector-c++-noinstall-1.1.9-win32\lib;D:\CProj\EBotPlatform\Source\libs\lua;D:\CProj\EBotPlatform\Source\libs\glib\lib;D:\CProj\EBotPlatform\Source\libs\curl-7.53.1\build\lib\Debug;D:\CProj\EBotPlatform\Source\libs\objectscript-master\build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>liblua53.a;libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -129,7 +129,9 @@
     <ClCompile Include="host.cpp" />
     <ClCompile Include="inetwork.cpp" />
     <ClCompile Include="longpoll.cpp" />
+    <ClCompile Include="mysql.cpp" />
     <ClCompile Include="random.cpp" />
+    <ClCompile Include="regular.cpp" />
     <ClCompile Include="userlogic.cpp" />
     <ClCompile Include="userlogic_api.cpp" />
     <ClCompile Include="vkwork.cpp" />
@@ -145,6 +147,7 @@
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="inetwork.h" />
     <ClInclude Include="longpoll.h" />
+    <ClInclude Include="mysql.h" />
     <ClInclude Include="userlogic.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="vkwork.h" />

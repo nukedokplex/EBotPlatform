@@ -17,8 +17,8 @@ std::map<int, VKRequest> vkrs;
 
 void VK_Init() {
 	console::log("Initialization VKWork...", "Core:VK_Init");
-	Cvar_AddCvar("vk_token", "-", "Token on VKontakte");
-	Cvar_AddCvar("vk_version", "5.63", "Api version on VKontakte");
+	cvar::add("vk_token", "-", "Token on VKontakte");
+	cvar::add("vk_version", "5.63", "Api version on VKontakte");
 }
 
 int VK_RegisterVKR(VKRequest vkr) {
@@ -48,14 +48,14 @@ std::string VK_Send(int vkrid) {
 }
 
 std::string VK_GetToken() {
-	return Cvar_GetValue("vk_token");
+	return cvar::get("vk_token");
 }
 
 std::string Utf8_to_cp1251(const char *str);
 std::string VK_Send(std::string method, std::map<std::string, std::string> params, bool sendtoken) {
 	if (sendtoken)
-		params["access_token"] = Cvar_GetValue("vk_token");
-	params["v"] = Cvar_GetValue("vk_version");
+		params["access_token"] = cvar::get("vk_token");
+	params["v"] = cvar::get("vk_version");
 	std::string str = Utf8_to_cp1251((char *)(Net_Post("https://api.vk.com/method/" + method, params)));
 	return str;
 }

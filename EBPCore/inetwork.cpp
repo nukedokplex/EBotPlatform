@@ -62,7 +62,7 @@ std::string Nettest_Command(std::vector<std::string> cmd_args)
 void Net_Init() {
 	console::log("Initialization Network...", "Core:Net_Init");
 	Cmd_AddCommand("nettest", Nettest_Command, "Get server response");
-	Cvar_AddCvar("net_agent", "ebotplatrorm-agent/5.0", "User Agent on Net");
+	cvar::add("net_agent", "ebotplatrorm-agent/5.0", "User Agent on Net");
 }
 
 void *Net_Get(std::string url) {
@@ -74,7 +74,7 @@ void *Net_Get(std::string url) {
 	curl = curl_easy_init();
 	if (curl) {
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, Cvar_GetValue("net_agent").c_str());
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, cvar::get("net_agent").c_str());
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
@@ -98,7 +98,7 @@ void *Net_Post(std::string url, std::map<std::string, std::string> params) {
 	curl = curl_easy_init();
 	if (curl) {
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, Cvar_GetValue("net_agent").c_str());
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, cvar::get("net_agent").c_str());
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);

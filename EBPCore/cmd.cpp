@@ -55,7 +55,7 @@ std::string Exec_Command(std::vector<std::string> cmd_args)
 void Cmd_AddCommand(const std::string cmd_name, xcommand_t function, const std::string cmd_desc)
 {
 	cmd_s	cmd;
-	if (Cvar_Exists(cmd_name))
+	if (cvar::exists(cmd_name))
 	{
 		console::log(cmd_name+" already defined as a ñvar", "Core:Cmd_AddCommand");
 		return;
@@ -84,14 +84,14 @@ std::string Cmd_ExeCommand(std::string text)
 	if (Cmd_Exists(cmd_args[0]))
 	{
 		return commands.find(cmd_args[0])->second.function(cmd_args);
-	} else if (Cvar_Exists(cmd_args[0]))
+	} else if (cvar::exists(cmd_args[0]))
 	{
 		if (cmd_args.size() == 2) {
-			Cvar_SetValue(cmd_args[0], cmd_args[1]);
-			return cmd_args[0] + " = " + Cvar_GetValue(cmd_args[0]);
+			cvar::set(cmd_args[0], cmd_args[1]);
+			return cmd_args[0] + " = " + cvar::get(cmd_args[0]);
 		}
 		else {
-			return cmd_args[0] + " = " + Cvar_GetValue(cmd_args[0]);
+			return cmd_args[0] + " = " + cvar::get(cmd_args[0]);
 		}
 	}
 	else

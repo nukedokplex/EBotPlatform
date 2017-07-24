@@ -8,7 +8,7 @@
 void FS_Init(std::string botdir)
 {
 	console::log("Initialization Filesystem...", "Core:FS_Init");
-	Cvar_AddCvar("bot_dir", botdir, "Bot directory");
+	cvar::add("bot_dir", botdir, "Bot directory");
 }
 
 std::string FS_GetFullPath(std::string path, bool inBotFolder)
@@ -18,14 +18,14 @@ std::string FS_GetFullPath(std::string path, bool inBotFolder)
 
 std::string FS_GetRootPath()
 {
-	return Cvar_GetValue("bot_dir") + "/";
+	return cvar::get("bot_dir") + "/";
 }
 
 bool FS_Exists(std::string path, bool inBotFolder)
 {
 	std::ifstream fin;
 	if (inBotFolder)
-		fin.open(Cvar_GetValue("bot_dir") + "/" + path);
+		fin.open(cvar::get("bot_dir") + "/" + path);
 	else
 		fin.open(path);
 	if (fin.is_open()) {
@@ -43,7 +43,7 @@ std::fstream FS_OpenFile(std::string path, bool inBotFolder)
 	}
 	std::fstream fin;
 	if (inBotFolder)
-		fin.open(Cvar_GetValue("bot_dir") + "/" + path);
+		fin.open(cvar::get("bot_dir") + "/" + path);
 	else
 		fin.open(path);
 	return fin;
