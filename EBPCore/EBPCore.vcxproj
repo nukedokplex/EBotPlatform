@@ -128,6 +128,7 @@
     <ClCompile Include="flags.cpp" />
     <ClCompile Include="host.cpp" />
     <ClCompile Include="inetwork.cpp" />
+    <ClCompile Include="longpoll.cpp" />
     <ClCompile Include="random.cpp" />
     <ClCompile Include="userlogic.cpp" />
     <ClCompile Include="userlogic_api.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="events.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="inetwork.h" />
+    <ClInclude Include="longpoll.h" />
     <ClInclude Include="userlogic.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="vkwork.h" />

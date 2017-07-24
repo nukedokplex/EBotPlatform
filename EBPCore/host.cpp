@@ -7,7 +7,7 @@
 #include "inetwork.h"
 #include "vkwork.h"
 #include "userlogic.h"
-
+#include "longpoll.h"
 
 inputApi api_input = {
 	Console_Log,
@@ -39,7 +39,7 @@ inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 	Cmd_ExeConfig("config.cfg");
 
 	UL_Start();
-	VKW_Start();
+	longpoll::start();
 
 
 	atexit(Host_Shutdown);
