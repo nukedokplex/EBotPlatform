@@ -39,8 +39,8 @@ void UL_RegisterAPI()
 	// Consoló
 	luabridge::getGlobalNamespace(LuaScript)
 	.beginNamespace("console")
-		.addFunction("log", Console_Log)
-		.addFunction("error", Console_Error)
+		.addFunction("log", console::log)
+		.addFunction("error", console::error)
 	.endNamespace();
 	
 	// Cvar

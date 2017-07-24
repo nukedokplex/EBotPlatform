@@ -16,7 +16,7 @@ std::map<int, VKRequest> vkrs;
 
 
 void VK_Init() {
-	Console_Log("Initialization VKWork...", "Core:VK_Init");
+	console::log("Initialization VKWork...", "Core:VK_Init");
 	Cvar_AddCvar("vk_token", "-", "Token on VKontakte");
 	Cvar_AddCvar("vk_version", "5.63", "Api version on VKontakte");
 }

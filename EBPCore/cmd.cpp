@@ -24,7 +24,7 @@ std::string Loh_Command(std::vector<std::string> cmd_args);
 */
 void Cmd_Init()
 {
-	Console_Log("Initialization Commands...", "Core:Cmd_Init");
+	console::log("Initialization Commands...", "Core:Cmd_Init");
 	Cmd_AddCommand("title", Title_Command, "Set window title");
 	Cmd_AddCommand("exec", Exec_Command, "Execute config file");
 	Cmd_AddCommand("loh", Loh_Command, "Get loh");
@@ -57,12 +57,12 @@ void Cmd_AddCommand(const std::string cmd_name, xcommand_t function, const std::
 	cmd_s	cmd;
 	if (Cvar_Exists(cmd_name))
 	{
-		Console_Log(cmd_name+" already defined as a ñvar", "Core:Cmd_AddCommand");
+		console::log(cmd_name+" already defined as a ñvar", "Core:Cmd_AddCommand");
 		return;
 	}
 	if (Cmd_Exists(cmd_name))
 	{
-		Console_Log(cmd_name +" already defined\n", "Core:Cmd_AddCommand");
+		console::log(cmd_name +" already defined\n", "Core:Cmd_AddCommand");
 		return;
 	}
 	cmd = cmd_s();

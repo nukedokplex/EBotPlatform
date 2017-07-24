@@ -14,7 +14,7 @@ std::string VoidToString(void *voids) {
 	std::setlocale(LC_ALL, "");
 	std::u32string utf32str ((char *)voids, strlen((char *)voids));
 	std::string str(utf32str.begin(), utf32str.end());
-	Console_Log(str, "123");
+	console::log(str, "123");
 	return str;
 }*/
 

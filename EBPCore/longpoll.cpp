@@ -41,7 +41,7 @@ void longpoll::start()
 
 void longpoll::getServer()
 {
-	Console_Log("Get LongPoll server...", "Core:LongPoll");
+	console::log("Get LongPoll server...", "Core:LongPoll");
 	// Send response
 	int getLongPollRequest = VK_CreateRequest("messages.getLongPollServer");
 	json longpollinfo = json::parse(VK_Send(getLongPollRequest).c_str());
@@ -94,11 +94,11 @@ void longpoll::loop() {
 	// Catch errors
 	catch (string e)
 	{// String errors
-		Console_Error("Error ("+e+"), reconnect...", "Core:LongPoll");
+		console::error("Error ("+e+"), reconnect...", "Core:LongPoll");
 	}
 	catch (...) 
 	{// Unknow errors
-		Console_Error("Unknow error, reconnect...", "Core:LongPoll");
+		console::error("Unknow error, reconnect...", "Core:LongPoll");
 	}
 	// Start again
 	loop();

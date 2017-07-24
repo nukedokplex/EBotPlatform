@@ -22,7 +22,7 @@ std::string Title_Command(std::vector<std::string> cmd_args)
 std::string Loh_Command(std::vector<std::string> cmd_args)
 {
 	for (int i = 0; i<100; i++)
-		Console_Log("SAM LOH!", "AZAZA");
+		console::log("SAM LOH!", "AZAZA");
 	return "Loh";
 }
 

@@ -10,7 +10,7 @@
 #include "longpoll.h"
 
 inputApi api_input = {
-	Console_Log,
+	console::log,
 	Cmd_ExeCommand
 };
 outputApi api_output;
@@ -29,7 +29,7 @@ inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 	 // вызов функции настройки локали
 
 	api_output = api;
-	Console_Log("Initialization EBotPlatform "+GetVersionName(), "Core:Host_Main");
+	console::log("Initialization EBotPlatform "+GetVersionName(), "Core:Host_Main");
 	FS_Init(botname);
 	Cmd_Init();
 	Net_Init();

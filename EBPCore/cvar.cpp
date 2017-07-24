@@ -31,14 +31,14 @@ void Cvar_AddCvar(const std::string cvar_name, std::string value, const std::str
 
 	if (Cmd_Exists(cvar_name))
 	{
-		Console_Log(cvar_name + " already defined as a command", "Core:Cmd_AddCommand");
+		console::log(cvar_name + " already defined as a command", "Core:Cmd_AddCommand");
 		return;
 	}
 
 	// fail if the command already exists
 	if (Cvar_Exists(cvar_name))
 	{
-		Console_Log(cvar_name + " already defined", "Core:Cmd_AddCommand");
+		console::log(cvar_name + " already defined", "Core:Cmd_AddCommand");
 		return;
 	}
 
@@ -56,7 +56,7 @@ Desc: Get value of cvar name
 std::string Cvar_GetValue(const std::string cvar_name)
 {
 	if (!Cvar_Exists(cvar_name)){
-		Console_Log("Error: cvar \"" + cvar_name + "\" not found", "Core:Cvar_GetValue");
+		console::log("Error: cvar \"" + cvar_name + "\" not found", "Core:Cvar_GetValue");
 		return NULL;
 	}
 	return cvars.find(cvar_name)->second.value;
@@ -68,7 +68,7 @@ std::string Cvar_GetValue(const std::string cvar_name)
 bool Cvar_SetValue(const std::string cvar_name, std::string cvar_value)
 {
 	if (!Cvar_Exists(cvar_name)) {
-		Console_Log("Error: cvar \"" + cvar_name + "\" not found", "Core:Cvar_SetValue");
+		console::log("Error: cvar \"" + cvar_name + "\" not found", "Core:Cvar_SetValue");
 		return false;
 	}
 	cvars[cvar_name].value = cvar_value;

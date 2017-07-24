@@ -60,7 +60,7 @@ std::string Nettest_Command(std::vector<std::string> cmd_args)
 }
 
 void Net_Init() {
-	Console_Log("Initialization Network...", "Core:Net_Init");
+	console::log("Initialization Network...", "Core:Net_Init");
 	Cmd_AddCommand("nettest", Nettest_Command, "Get server response");
 	Cvar_AddCvar("net_agent", "ebotplatrorm-agent/5.0", "User Agent on Net");
 }
@@ -82,7 +82,7 @@ void *Net_Get(std::string url) {
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
 		res = curl_easy_perform(curl);
 		if (res != CURLE_OK)
-			Console_Log("curl_easy_perform() failed: " + (std::string)curl_easy_strerror(res), "Core:Net_Get");
+			console::log("curl_easy_perform() failed: " + (std::string)curl_easy_strerror(res), "Core:Net_Get");
 		curl_easy_cleanup(curl);
 		return chunk.memory;
 	}
@@ -115,7 +115,7 @@ void *Net_Post(std::string url, std::map<std::string, std::string> params) {
 
 		res = curl_easy_perform(curl);
 		if (res != CURLE_OK)
-			Console_Log("curl_easy_perform() failed: " + (std::string)curl_easy_strerror(res), "Core:Net_Post");
+			console::log("curl_easy_perform() failed: " + (std::string)curl_easy_strerror(res), "Core:Net_Post");
 		curl_easy_cleanup(curl);
 		return chunk.memory;
 	}

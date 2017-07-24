@@ -7,7 +7,7 @@
 
 void FS_Init(std::string botdir)
 {
-	Console_Log("Initialization Filesystem...", "Core:FS_Init");
+	console::log("Initialization Filesystem...", "Core:FS_Init");
 	Cvar_AddCvar("bot_dir", botdir, "Bot directory");
 }
 
@@ -38,7 +38,7 @@ bool FS_Exists(std::string path, bool inBotFolder)
 std::fstream FS_OpenFile(std::string path, bool inBotFolder)
 {
 	if (!FS_Exists(path, inBotFolder)) {
-		Console_Log("Error: " + path + " not found", "Core:FS_OpenFile");
+		console::log("Error: " + path + " not found", "Core:FS_OpenFile");
 		return std::fstream();
 	}
 	std::fstream fin;
