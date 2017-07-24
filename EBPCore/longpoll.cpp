@@ -8,7 +8,8 @@
 using namespace std;
 using namespace longpoll;
 
-map<int, void(*)(json update)> longpollUpdates;
+
+map<int, update> longpollUpdates;
 
 string server;
 string key;
@@ -17,22 +18,22 @@ int ts;
 void longpoll::start()
 {
 	// Set longpoll events
-	longpollUpdates[1] = update::replaceMessageFlags;
-	longpollUpdates[2] = update::setMessageFlags;
-	longpollUpdates[3] = update::flushMessageFlags;
-	longpollUpdates[4] = update::newMessage;
-	longpollUpdates[6] = update::readInMessage;
-	longpollUpdates[7] = update::readOutMessage;
-	longpollUpdates[8] = update::wasOnline;
-	longpollUpdates[9] = update::wasOffline;
-	longpollUpdates[10] = update::flushDialogFlags;
-	longpollUpdates[11] = update::replaceDialogFlags;
-	longpollUpdates[12] = update::setDialogFlags;
-	longpollUpdates[51] = update::chatEdited;
-	longpollUpdates[61] = update::typingDialog;
-	longpollUpdates[62] = update::typingChat;
-	longpollUpdates[80] = update::editUnreadCount;
-	longpollUpdates[114] = update::editNotifyChat;
+	longpollUpdates[1] = { "vk_flags_replace", false };
+	longpollUpdates[2] = { "vk_flags_set", false };
+	longpollUpdates[3] = { "vk_flags_remove", false };
+	longpollUpdates[4] = { "vk_message", false };
+	longpollUpdates[6] = { "vk_messages_read_in", false };
+	longpollUpdates[7] = { "vk_messages_read_out", false };
+	longpollUpdates[8] = { "vk_was_online", true };
+	longpollUpdates[9] = { "vk_was_offline", true };
+	longpollUpdates[10] = { "vk_dialog_flags_remove", false };
+	longpollUpdates[11] = { "vk_dialog_flags_replace", false };
+	longpollUpdates[12] = { "vk_dialog_flags_set", false };
+	longpollUpdates[51] = { "vk_chat_edit", false };
+	longpollUpdates[61] = { "vk_typing", false };
+	longpollUpdates[62] = { "vk_typing_chat", false };
+	longpollUpdates[80] = { "vk_unread_edit", false };
+	longpollUpdates[114] = { "vk_notify_edit", true };
 	// Start LongPoll
 	getServer();
 	std::thread loopthread(loop);
@@ -88,7 +89,7 @@ void longpoll::loop() {
 				}
 			}
 			ts = data.at("ts");// Update TS
-			data = NULL;
+			data = 0;
 		}
 	}
 	// Catch errors
@@ -106,154 +107,15 @@ void longpoll::loop() {
 
 void longpoll::getUpdate(json *update) {
 	int code = update->at(0);
-	std::thread loopthread(longpollUpdates[code], *update);
-	loopthread.detach();
-}
+	longpoll::update *upd = &longpollUpdates[code];
 
-//Code: 1
-void update::replaceMessageFlags(json update) {
-	if (!Event_Exists("vk_flags_replace"))
+	if (!Event_Exists(upd->name))
 		return;
 	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_flags_replace", eid);
-}
-//Code: 2
-void update::setMessageFlags(json update) {
-	if (!Event_Exists("vk_message_set"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_message_set", eid);
-}
-//Code: 3
-void update::flushMessageFlags(json update) {
-	if (!Event_Exists("vk_flags_remove"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_flags_remove", eid);
-}
-//Code: 4
-void update::newMessage(json update) {
-	if (!Event_Exists("vk_message"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_message", eid);
-}
-//Code: 6
-void update::readInMessage(json update) {
-	if (!Event_Exists("vk_messages_read_in"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_messages_read_in", eid);
-}
-//Code: 7
-void update::readOutMessage(json update) {
-	if (!Event_Exists("vk_messages_read_out"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_messages_read_out", eid);
-}
-//Code: 8
-void update::wasOnline(json update) {
-	if (!Event_Exists("vk_was_online"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_PushInt(eid, update.at(3));
-	Event_Call("vk_was_online", eid);
-}
-//Code: 9
-void update::wasOffline(json update) {
-	if (!Event_Exists("vk_was_offline"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_PushInt(eid, update.at(3));
-	Event_Call("vk_was_offline", eid);
-}
-//Code: 10
-void update::flushDialogFlags(json update) {
-	if (!Event_Exists("vk_dialog_flags_remove"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_dialog_flags_remove", eid);
-}
-//Code: 11
-void update::replaceDialogFlags(json update) {
-	if (!Event_Exists("vk_dialog_flags_replace"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_dialog_flags_replace", eid);
-}
-//Code: 12
-void update::setDialogFlags(json update) {
-	if (!Event_Exists("vk_dialog_flags_set"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_dialog_flags_set", eid);
-}
-//Code: 51
-void update::chatEdited(json update) {
-	if (!Event_Exists("vk_chat_edit"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_chat_edit", eid);
-}
-//Code: 61
-void update::typingDialog(json update) {
-	if (!Event_Exists("vk_typing"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_typing", eid);
-}
-//Code: 62
-void update::typingChat(json update) {
-	if (!Event_Exists("vk_typing_chat"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_typing_chat", eid);
-}
-//Code: 80
-void update::editUnreadCount(json update) {
-	if (!Event_Exists("vk_unread_edit"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_Call("vk_unread_edit", eid);
-}
-//Code: 114
-void update::editNotifyChat(json update) {
-	if (!Event_Exists("vk_notify_edit"))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update.at(1));
-	Event_PushInt(eid, update.at(2));
-	Event_PushInt(eid, update.at(3));
-	Event_Call("vk_notify_edit", eid);
+	Event_PushInt(eid, update->at(1));
+	Event_PushInt(eid, update->at(2));
+	if(upd->dopValue)
+		Event_PushInt(eid, update->at(3));
+	std::thread loopthread(Event_Call, upd->name, eid);
+	loopthread.detach();
 }
