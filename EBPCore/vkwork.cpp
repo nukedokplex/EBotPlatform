@@ -42,6 +42,11 @@ void VK_SetParam(int vkrid, std::string p_name, std::string p_value) {
 }
 
 std::string VK_Send(int vkrid) {
+	if (vkrs.find(vkrid) == vkrs.end())
+	{
+		console::error("VKRID not found", "vkwork");
+		return "";
+	}
 	VKRequest vkr = vkrs[vkrid];
 	vkrs.erase(vkrid);
 	return VK_Send(vkr.method, vkr.params, vkr.sendtoken);
