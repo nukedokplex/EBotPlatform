@@ -12,7 +12,7 @@
 
 inputApi api_input = {
 	console::log,
-	Cmd_ExeCommand
+	cmd::exe
 };
 outputApi api_output;
 
@@ -30,15 +30,15 @@ inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 	 // вызов функции настройки локали
 
 	api_output = api;
-	console::log("Initialization EBotPlatform "+GetVersionName(), "Core:Host_Main");
+	console::log("Initialization EBotPlatform "+common::getVersionName(), "Core:Host_Main");
 	FS_Init(botname);
-	Cmd_Init();
+	cmd::init();
 	Net_Init();
 	VK_Init();
 	UL_Init();
 	mysql::utils::init();
 
-	Cmd_ExeConfig("config.cfg");
+	cmd::exec("config.cfg");
 
 	mysql::utils::start();
 	UL_Start();

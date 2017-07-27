@@ -33,7 +33,7 @@ bool LuaRun;
 void UL_Init()
 {
 	console::log("Initialization UserLogic...", "Core:UL_Init");
-	Cmd_AddCommand("relua", ReUL_Command, "Reload UserLogic");
+	cmd::add("relua", ReUL_Command, "Reload UserLogic");
 	cvar::add("dll_path", "scripts/main.lua", "Path to DLL");
 }
 

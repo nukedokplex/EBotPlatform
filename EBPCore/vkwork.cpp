@@ -38,6 +38,11 @@ int VK_CreateRequest(std::string method, bool sendtoken) {
  
 std::string cp1251_to_Utf8(const char *str);
 void VK_SetParam(int vkrid, std::string p_name, std::string p_value) {
+	if (vkrs.find(vkrid) == vkrs.end())
+	{
+		console::error("VKRID not found", "vkwork");
+		return;
+	}
 	vkrs[vkrid].params[p_name] = cp1251_to_Utf8(p_value.c_str());
 }
 

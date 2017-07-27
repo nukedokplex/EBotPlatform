@@ -29,10 +29,10 @@ void UL_RegisterAPI()
 	// CMD
 	luabridge::getGlobalNamespace(LuaScript)
 	.beginNamespace("cmd")
-		.addFunction("exeConfig", Cmd_ExeConfig)
-		//.addFunction("add", Cmd_AddCommand); -- TODO add Lua functions
-		.addFunction("exists", Cmd_Exists)
-		.addFunction("exec", Cmd_ExeCommand)
+		.addFunction("exeConfig", cmd::exe)
+		//.addFunction("add", cmd::add); -- TODO add Lua functions
+		.addFunction("exists", cmd::exists)
+		.addFunction("exec", cmd::exe)
 		.addFunction("parse", API_Cmd_ParseArgs)
 	.endNamespace();
 
@@ -110,7 +110,7 @@ void UL_RegisterAPI()
 
 // Console
 luabridge::LuaRef API_Cmd_ParseArgs(std::string text) {
-	std::vector<std::string> or = Cmd_ParseArgs(text);
+	std::vector<std::string> or = cmd::parse(text);
 	luabridge::LuaRef r = luabridge::newTable(LuaScript);
 	for (int i = 0;i < or.size();i++)
 		r[i+1] = (std::string)or[i];

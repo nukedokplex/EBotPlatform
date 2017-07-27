@@ -13,6 +13,8 @@ extern "C" {
 	void EXPORT Host_Shutdown(void);
 }
 
-extern std::string Title_Command(std::vector<std::string> cmd_args);
-extern std::string GetVersionName();
-
+namespace common
+{
+	std::string c_title(std::vector<std::string> cmd_args);
+	std::string getVersionName();
+}

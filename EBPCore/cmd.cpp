@@ -6,66 +6,59 @@
 #include <vector>
 #include "filesystem.h"
 
+using namespace cmd;
 
-struct cmd_s
-{
-	std::string name;
-	xcommand_t	function;
-	std::string desc;
-};
+
 
 // Local
-std::map<std::string, cmd_s> commands;
-std::string Exec_Command(std::vector<std::string> cmd_args);
-std::string Loh_Command(std::vector<std::string> cmd_args);
+std::map<std::string, command> commands;
 
 /*
 	Инициализация команд
 */
-void Cmd_Init()
+void cmd::init()
 {
 	console::log("Initialization Commands...", "Core:Cmd_Init");
-	Cmd_AddCommand("title", Title_Command, "Set window title");
-	Cmd_AddCommand("exec", Exec_Command, "Execute config file");
-	Cmd_AddCommand("loh", Loh_Command, "Get loh");
+	cmd::add("title", common::c_title, "Set window title");
+	cmd::add("exec", c_exec, "Execute config file");
 }
 
 /*
 	Есть ли команда
 */
-bool Cmd_Exists(const std::string cmd_name) {
+bool cmd::exists(const std::string cmd_name) {
 	return commands.find(cmd_name) != commands.end();
 }
 
 /*
 	Команда запуска конфига
 */
-std::string Exec_Command(std::vector<std::string> cmd_args)
+std::string cmd::c_exec(std::vector<std::string> cmd_args)
 {
 	if (cmd_args.size() != 2) {
 		return "Use \"exec <config path>\"";
 	}
-	Cmd_ExeConfig(cmd_args[1]);
+	exec(cmd_args[1]);
 	return "executing " + cmd_args[1] + "...";
 }
 
 /*
 	Добавить команду в консоль
 */
-void Cmd_AddCommand(const std::string cmd_name, xcommand_t function, const std::string cmd_desc)
+void cmd::add(const std::string cmd_name, func function, const std::string cmd_desc)
 {
-	cmd_s	cmd;
+	command	cmd;
 	if (cvar::exists(cmd_name))
 	{
-		console::log(cmd_name+" already defined as a сvar", "Core:Cmd_AddCommand");
+		console::log(cmd_name+" already defined as a сvar", "Core:cmd::add");
 		return;
 	}
-	if (Cmd_Exists(cmd_name))
+	if (exists(cmd_name))
 	{
-		console::log(cmd_name +" already defined\n", "Core:Cmd_AddCommand");
+		console::log(cmd_name +" already defined\n", "Core:cmd::add");
 		return;
 	}
-	cmd = cmd_s();
+	cmd = command();
 	cmd.name = cmd_name;
 	cmd.desc = cmd_desc;
 	cmd.function = function;
@@ -75,13 +68,13 @@ void Cmd_AddCommand(const std::string cmd_name, xcommand_t function, const std::
 /*
 Запустить линию команды
 */
-std::string Cmd_ExeCommand(std::string text)
+std::string cmd::exe(std::string text)
 {
 	if (text == "")
 		return "";
-	std::vector<std::string> cmd_args = Cmd_ParseArgs(text);
+	std::vector<std::string> cmd_args = parse(text);
 	// check functions
-	if (Cmd_Exists(cmd_args[0]))
+	if (exists(cmd_args[0]))
 	{
 		return commands.find(cmd_args[0])->second.function(cmd_args);
 	} else if (cvar::exists(cmd_args[0]))
@@ -98,7 +91,7 @@ std::string Cmd_ExeCommand(std::string text)
 		return "Unknown command \"" + cmd_args[0] + "\"\n";
 }
 
-std::vector<std::string> Cmd_ParseArgs(std::string text)
+std::vector<std::string> cmd::parse(std::string text)
 {
 	bool nospace = 0;
 	int index = 0;
@@ -125,14 +118,14 @@ std::vector<std::string> Cmd_ParseArgs(std::string text)
 	return cmd_args;
 }
 
-void Cmd_ExeConfig(std::string cpath)
+void cmd::exec(std::string cpath)
 {
 	std::string s;
 	std::fstream file = FS_OpenFile(cpath);
 	while (std::getline(file, s)) {
 		if (s=="" || s.front() == '#')
 			continue;
-		Cmd_ExeCommand(s);
+		exe(s);
 	}
 	file.close();
 }

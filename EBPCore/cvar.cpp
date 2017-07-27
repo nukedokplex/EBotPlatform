@@ -16,23 +16,23 @@ bool cvar::exists(const std::string cvar_name)
 
 /*
 ============
-Cmd_AddCommand
+cmd::add
 ============
 */
 void cvar::add(const std::string cvar_name, std::string value, const std::string cvar_desc)
 {
 	cvar_s	cvar;
 
-	if (Cmd_Exists(cvar_name))
+	if (cmd::exists(cvar_name))
 	{
-		console::log(cvar_name + " already defined as a command", "Core:Cmd_AddCommand");
+		console::log(cvar_name + " already defined as a command", "Core:cmd::add");
 		return;
 	}
 
 	// fail if the command already exists
 	if (exists(cvar_name))
 	{
-		console::log(cvar_name + " already defined", "Core:Cmd_AddCommand");
+		console::log(cvar_name + " already defined", "Core:cmd::add");
 		return;
 	}
 

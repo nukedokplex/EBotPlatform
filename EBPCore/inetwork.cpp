@@ -61,7 +61,7 @@ std::string Nettest_Command(std::vector<std::string> cmd_args)
 
 void Net_Init() {
 	console::log("Initialization Network...", "Core:Net_Init");
-	Cmd_AddCommand("nettest", Nettest_Command, "Get server response");
+	cmd::add("nettest", Nettest_Command, "Get server response");
 	cvar::add("net_agent", "ebotplatrorm-agent/5.0", "User Agent on Net");
 }
 

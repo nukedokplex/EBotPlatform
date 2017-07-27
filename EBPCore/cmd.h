@@ -1,11 +1,24 @@
 #pragma once
 #include <string>
 #include <vector>
-typedef std::string(*xcommand_t)(std::vector<std::string> cmd_args);
 
-void Cmd_AddCommand(const std::string cmd_name, xcommand_t function, const std::string cmd_desc);
-std::string Cmd_ExeCommand(std::string text);
-std::vector<std::string> Cmd_ParseArgs(std::string line);
-bool Cmd_Exists(const std::string cmd_name);
-void Cmd_Init();
-void Cmd_ExeConfig(std::string cpath);
+using namespace std;
+
+namespace cmd
+{
+	typedef string(*func)(vector<string> cmd_args);
+	struct command
+	{
+		string name;
+		cmd::func function;
+		string desc;
+	};
+
+	void add(const string cmd_name, func function, const string cmd_desc);
+	string exe(string text);
+	vector<string> parse(string line);
+	bool exists(const string cmd_name);
+	void init();
+	void exec(string cpath);
+	string c_exec(vector<string> cmd_args);
+}

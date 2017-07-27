@@ -17,7 +17,7 @@ void mysql::utils::init()
 	cvar::add("mysql_user", "root", "MySql user");
 	cvar::add("mysql_password", "root", "MySql password");
 	cvar::add("mysql_db", "", "MySql database");
-	Cmd_AddCommand("sql", mysql::utils::command, "Execute mysql command");
+	cmd::add("sql", mysql::utils::command, "Execute mysql command");
 }
 
 void mysql::utils::start()

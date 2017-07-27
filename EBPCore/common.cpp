@@ -7,7 +7,7 @@
 /*
 	Установить имя окна
 */
-std::string Title_Command(std::vector<std::string> cmd_args)
+std::string common::c_title(std::vector<std::string> cmd_args)
 {
 	if (cmd_args.size() != 2) {
 		return "Use \"title <window name>\"";
@@ -16,16 +16,6 @@ std::string Title_Command(std::vector<std::string> cmd_args)
 	return "New title is \"" + cmd_args[1] + "\"";
 }
 
-/*
-	Пасхалка
-*/
-std::string Loh_Command(std::vector<std::string> cmd_args)
-{
-	for (int i = 0; i<100; i++)
-		console::log("SAM LOH!", "AZAZA");
-	return "Loh";
-}
-
-std::string GetVersionName() {
+std::string common::getVersionName() {
 	return "A_" + std::to_string((int)(VERSION * 10.0f));
 }
