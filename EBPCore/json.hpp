@@ -9072,7 +9072,7 @@ class basic_json
     ~basic_json()
     {
         assert_invariant();
-       // m_value.destroy(m_type);
+        m_value.destroy(m_type);
     }
 
     /// @}

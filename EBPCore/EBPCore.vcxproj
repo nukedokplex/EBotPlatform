@@ -146,6 +146,7 @@
     <ClInclude Include="events.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="inetwork.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="longpoll.h" />
     <ClInclude Include="mysql.h" />
     <ClInclude Include="userlogic.h" />

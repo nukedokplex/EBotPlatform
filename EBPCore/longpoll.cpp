@@ -36,8 +36,16 @@ void longpoll::start()
 	longpollUpdates[114] = { "vk_notify_edit", true };
 	// Start LongPoll
 	getServer();
-	std::thread loopthread(loop);
+	std::thread loopthread(startLoop);
 	loopthread.detach();
+}
+
+void longpoll::startLoop()
+{
+	while (true)
+	{
+		loop();
+	}
 }
 
 void longpoll::getServer()
@@ -101,8 +109,6 @@ void longpoll::loop() {
 	{// Unknow errors
 		console::error("Unknow error, reconnect...", "Core:LongPoll");
 	}
-	// Start again
-	loop();
 }
 
 void longpoll::getUpdate(json *update) {

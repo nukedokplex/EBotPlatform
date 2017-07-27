@@ -12,6 +12,7 @@ namespace longpoll
 	};
 
 	void start();
+	void startLoop();
 	void getServer();
 	void loop();
 	void getUpdate(json *update);
