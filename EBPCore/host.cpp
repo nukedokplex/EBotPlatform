@@ -25,7 +25,7 @@ Desc: Init EBPCore
 */
 inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 {
-	setlocale(LC_CTYPE, "Russian");
+	setlocale(LC_ALL, "ru_RU.UTF-8");
 	system("chcp 65001");
 	 // вызов функции настройки локали
 

@@ -72,6 +72,9 @@
     <ClCompile Include="mysql.cpp">
       <Filter>Файлы исходного кода\userlogic</Filter>
     </ClCompile>
+    <ClCompile Include="string_utils.cpp">
+      <Filter>Файлы исходного кода\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console.h">

@@ -132,6 +132,7 @@
     <ClCompile Include="mysql.cpp" />
     <ClCompile Include="random.cpp" />
     <ClCompile Include="regular.cpp" />
+    <ClCompile Include="string_utils.cpp" />
     <ClCompile Include="userlogic.cpp" />
     <ClCompile Include="userlogic_api.cpp" />
     <ClCompile Include="vkwork.cpp" />

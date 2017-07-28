@@ -56,7 +56,7 @@ std::string Nettest_Command(std::vector<std::string> cmd_args)
 	if (ret == NULL) {
 		return "NETTEST UNKNOW ERROR";
 	}
-	return Utf8_to_cp1251((char *)ret);
+	return (char *)ret;
 }
 
 void Net_Init() {
@@ -141,11 +141,11 @@ int Net_CreatePost(std::string url)
 
 std::string cp1251_to_Utf8(const char *str);
 void Net_SetParam(int prid, std::string p_name, std::string p_value) {
-	prs[prid].params[p_name] = cp1251_to_Utf8(p_value.c_str());
+	prs[prid].params[p_name] = p_value.c_str();
 }
 
 std::string Net_Send(int prid) {
 	PostRequest pr = prs[prid];
 	prs.erase(prid);
-	return Utf8_to_cp1251((char *)Net_Post(pr.url, pr.params));
+	return (char *)Net_Post(pr.url, pr.params);
 }

@@ -29,6 +29,10 @@ void Sys_UnloadEngine(void)
 void instructionLoop();
 int main()
 {
+	setlocale(LC_ALL, "ru_RU.UTF-8");
+	std::locale::global(std::locale(""));
+	system("chcp 65001");
+
 	Sys_LoadEBP();
 	api_input = Host_Main(BOT_PATH, api_output);
 	api_input.Console_Log("Start instructionLoop()...", "Launcher:main");

@@ -43,7 +43,7 @@ void VK_SetParam(int vkrid, std::string p_name, std::string p_value) {
 		console::error("VKRID not found", "vkwork");
 		return;
 	}
-	vkrs[vkrid].params[p_name] = cp1251_to_Utf8(p_value.c_str());
+	vkrs[vkrid].params[p_name] = p_value.c_str();
 }
 
 std::string VK_Send(int vkrid) {
@@ -52,9 +52,10 @@ std::string VK_Send(int vkrid) {
 		console::error("VKRID not found", "vkwork");
 		return "";
 	}
-	VKRequest vkr = vkrs[vkrid];
+	VKRequest *vkr = &vkrs[vkrid];
+	std::string r = VK_Send(vkr->method, vkr->params, vkr->sendtoken);
 	vkrs.erase(vkrid);
-	return VK_Send(vkr.method, vkr.params, vkr.sendtoken);
+	return r;
 }
 
 std::string VK_GetToken() {
@@ -66,7 +67,7 @@ std::string VK_Send(std::string method, std::map<std::string, std::string> param
 	if (sendtoken)
 		params["access_token"] = cvar::get("vk_token");
 	params["v"] = cvar::get("vk_version");
-	std::string str = Utf8_to_cp1251((char *)(Net_Post("https://api.vk.com/method/" + method, params)));
+	std::string str = (std::string)(char *)(Net_Post("https://api.vk.com/method/" + method, params));
 	return str;
 }
 
