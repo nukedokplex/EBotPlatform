@@ -15,4 +15,9 @@ namespace utils
 	{
 		std::string replace(std::string text, std::string pattern, std::string to);
 	}
+	namespace string
+	{
+		std::string lower(std::string str);
+		std::string upper(std::string str);
+	}
 }

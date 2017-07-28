@@ -104,6 +104,12 @@ void UL_RegisterAPI()
 	// Other
 	luabridge::getGlobalNamespace(LuaScript)
 		.addFunction("changeCharset", Charset_Change);
+	// String UTF8
+	luabridge::getGlobalNamespace(LuaScript)
+		.beginNamespace("string")
+		.addFunction("lower", utils::string::lower)
+		.addFunction("upper", utils::string::upper)
+		.endNamespace();
 }
 
 // API \\
