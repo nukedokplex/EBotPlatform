@@ -1,21 +1,15 @@
+#include <map>
+#include <vector>
 #include "cmd.h"
 #include "common.h"
 #include "console.h"
 #include "cvar.h"
-#include <map>
-#include <vector>
 #include "filesystem.h"
 
 using namespace cmd;
 
-
-
-// Local
 std::map<std::string, command> commands;
 
-/*
-	Инициализация команд
-*/
 void cmd::init()
 {
 	console::log("Initialization Commands...", "Core:Cmd_Init");
@@ -23,16 +17,10 @@ void cmd::init()
 	cmd::add("exec", c_exec, "Execute config file");
 }
 
-/*
-	Есть ли команда
-*/
 bool cmd::exists(const std::string cmd_name) {
 	return commands.find(cmd_name) != commands.end();
 }
 
-/*
-	Команда запуска конфига
-*/
 std::string cmd::c_exec(std::vector<std::string> cmd_args)
 {
 	if (cmd_args.size() != 2) {
@@ -42,9 +30,6 @@ std::string cmd::c_exec(std::vector<std::string> cmd_args)
 	return "executing " + cmd_args[1] + "...";
 }
 
-/*
-	Добавить команду в консоль
-*/
 void cmd::add(const std::string cmd_name, func function, const std::string cmd_desc)
 {
 	command	cmd;
@@ -65,9 +50,6 @@ void cmd::add(const std::string cmd_name, func function, const std::string cmd_d
 	commands[cmd_name] = cmd;
 }
 
-/*
-Запустить линию команды
-*/
 std::string cmd::exe(std::string text)
 {
 	if (text == "")
@@ -117,6 +99,8 @@ std::vector<std::string> cmd::parse(std::string text)
 	}
 	return cmd_args;
 }
+
+
 
 void cmd::exec(std::string cpath)
 {
