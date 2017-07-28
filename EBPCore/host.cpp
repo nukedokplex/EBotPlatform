@@ -16,13 +16,6 @@ inputApi api_input = {
 };
 outputApi api_output;
 
-
-
-
-/*
-Function: Host_Main
-Desc: Init EBPCore
-*/
 inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 {
 	setlocale(LC_ALL, "ru_RU.UTF-8");
@@ -35,7 +28,7 @@ inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 	cmd::init();
 	cvar::init();
 	Net_Init();
-	VK_Init();
+	vk::init();
 	UL_Init();
 	mysql::utils::init();
 

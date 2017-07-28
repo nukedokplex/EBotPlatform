@@ -52,8 +52,8 @@ void longpoll::getServer()
 {
 	console::log("Get LongPoll server...", "Core:LongPoll");
 	// Send response
-	int getLongPollRequest = VK_CreateRequest("messages.getLongPollServer");
-	json longpollinfo = json::parse(VK_Send(getLongPollRequest).c_str());
+	int getLongPollRequest = vk::create("messages.getLongPollServer");
+	json longpollinfo = json::parse(vk::send(getLongPollRequest).c_str());
 	// Get values
 	string _server = longpollinfo.at("response").at("server");
 	string _key = longpollinfo.at("response").at("key");

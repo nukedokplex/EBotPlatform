@@ -83,11 +83,11 @@ void UL_RegisterAPI()
 	// VKWORK
 	luabridge::getGlobalNamespace(LuaScript)
 		.beginNamespace("vk")
-		.addFunction("create", VK_CreateRequest)
-		.addFunction("set", VK_SetParam)
-		.addFunction("send", (std::string(*)(int))VK_Send)
-		.addFunction("send_off", VK_SendOff)
-		.addFunction("getToken", VK_GetToken)
+		.addFunction("create", vk::create)
+		.addFunction("set", vk::set)
+		.addFunction("send", (std::string(*)(int))vk::send)
+		.addFunction("send_off", vk::send_off)
+		.addFunction("getToken", vk::getToken)
 	.endNamespace();
 	// Flags
 	luabridge::getGlobalNamespace(LuaScript)

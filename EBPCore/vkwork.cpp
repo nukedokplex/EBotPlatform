@@ -9,19 +9,18 @@
 #include <map>
 #include <thread> 
 
+using namespace vk;
 using json = nlohmann::json;
 
 std::map<int, VKRequest> vkrs;
 
-
-
-void VK_Init() {
+void vk::init() {
 	console::log("Initialization VKWork...", "Core:VK_Init");
 	cvar::add("vk_token", "-", "Token on VKontakte");
-	cvar::add("vk_version", "5.63", "Api version on VKontakte");
+	cvar::add("vk_version", "5.63", "Api version on VK");
 }
 
-int VK_RegisterVKR(VKRequest vkr) {
+int vk::registerVkr(VKRequest vkr) {
 	int i = 0;
 	while (vkrs.find(i) != vkrs.end())
 		i++;
@@ -29,15 +28,14 @@ int VK_RegisterVKR(VKRequest vkr) {
 	return i;
 }
 
-int VK_CreateRequest(std::string method, bool sendtoken) {
+int vk::create(std::string method, bool sendtoken) {
 	VKRequest vkr = VKRequest();
 	vkr.method = method;
 	vkr.sendtoken = sendtoken;
-	return VK_RegisterVKR(vkr);
+	return vk::registerVkr(vkr);
 }
  
-std::string cp1251_to_Utf8(const char *str);
-void VK_SetParam(int vkrid, std::string p_name, std::string p_value) {
+void vk::set(int vkrid, std::string p_name, std::string p_value) {
 	if (vkrs.find(vkrid) == vkrs.end())
 	{
 		console::error("VKRID not found", "vkwork");
@@ -46,24 +44,22 @@ void VK_SetParam(int vkrid, std::string p_name, std::string p_value) {
 	vkrs[vkrid].params[p_name] = p_value.c_str();
 }
 
-std::string VK_Send(int vkrid) {
+std::string vk::send(int vkrid) {
 	if (vkrs.find(vkrid) == vkrs.end())
 	{
 		console::error("VKRID not found", "vkwork");
 		return "";
 	}
-	VKRequest *vkr = &vkrs[vkrid];
-	std::string r = VK_Send(vkr->method, vkr->params, vkr->sendtoken);
+	std::string r = send(vkrs[vkrid].method, vkrs[vkrid].params, vkrs[vkrid].sendtoken);
 	vkrs.erase(vkrid);
 	return r;
 }
 
-std::string VK_GetToken() {
+std::string vk::getToken() {
 	return cvar::get("vk_token");
 }
 
-std::string Utf8_to_cp1251(const char *str);
-std::string VK_Send(std::string method, std::map<std::string, std::string> params, bool sendtoken) {
+std::string vk::send(std::string method, std::map<std::string, std::string> params, bool sendtoken) {
 	if (sendtoken)
 		params["access_token"] = cvar::get("vk_token");
 	params["v"] = cvar::get("vk_version");
@@ -71,7 +67,6 @@ std::string VK_Send(std::string method, std::map<std::string, std::string> param
 	return str;
 }
 
-
-void VK_SendOff(VKRequest vkr) {}
+void vk::send_off(VKRequest vkr) {}
 
 
