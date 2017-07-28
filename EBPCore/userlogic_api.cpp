@@ -101,15 +101,16 @@ void UL_RegisterAPI()
 		.beginNamespace("reg")
 		.addFunction("replace", utils::regular::replace)
 	.endNamespace();
-	// Other
-	luabridge::getGlobalNamespace(LuaScript)
-		.addFunction("changeCharset", Charset_Change);
 	// String UTF8
 	luabridge::getGlobalNamespace(LuaScript)
 		.beginNamespace("string")
 		.addFunction("lower", utils::string::lower)
 		.addFunction("upper", utils::string::upper)
-		.endNamespace();
+	.endNamespace();
+	// Other
+	luabridge::getGlobalNamespace(LuaScript)
+		.addFunction("changeCharset", Charset_Change)
+		.addFunction("getVersionName", common::getVersionName);
 }
 
 // API \\
