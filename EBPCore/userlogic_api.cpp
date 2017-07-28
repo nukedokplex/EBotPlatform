@@ -29,10 +29,10 @@ void UL_RegisterAPI()
 	// CMD
 	luabridge::getGlobalNamespace(LuaScript)
 	.beginNamespace("cmd")
-		.addFunction("exeConfig", cmd::exe)
+		.addFunction("exeConfig", cmd::exec)
 		//.addFunction("add", cmd::add); -- TODO add Lua functions
 		.addFunction("exists", cmd::exists)
-		.addFunction("exec", cmd::exe)
+		.addFunction("exe", cmd::exe)
 		.addFunction("parse", API_Cmd_ParseArgs)
 	.endNamespace();
 
