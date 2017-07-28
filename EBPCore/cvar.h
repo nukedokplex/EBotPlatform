@@ -12,6 +12,8 @@ namespace cvar
 		std::string desc;
 	};
 	// Functions
+	void init();
+	std::string c_cvars(std::vector<std::string> cmd_args);
 	bool exists(const std::string cvar_name);
 	void add(const std::string cvar_name, std::string value, const std::string cvar_desc);
 	std::string get(const std::string cvar_name);

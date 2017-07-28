@@ -33,6 +33,7 @@ inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 	console::log("Initialization EBotPlatform "+common::getVersionName(), "Core:Host_Main");
 	FS_Init(botname);
 	cmd::init();
+	cvar::init();
 	Net_Init();
 	VK_Init();
 	UL_Init();

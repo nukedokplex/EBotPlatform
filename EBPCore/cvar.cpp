@@ -6,7 +6,22 @@
 #include <vector>
 using namespace cvar;
 
-std::map<std::string, cvar_s> cvars;
+map<std::string, cvar_s> cvars;
+
+void cvar::init()
+{
+	cmd::add("cvars", c_cvars, "Get cvar list");
+}
+
+std::string cvar::c_cvars(std::vector<std::string> cmd_args)
+{
+	std::string ret = "EBP " + common::getVersionName() + " cvars:";
+	for (std::map <std::string, cvar_s> ::iterator it = cvars.begin(); it != cvars.end(); ++it)
+	{
+		ret += "\n" + it->first + " - " + it->second.desc;
+	}
+	return ret;
+}
 
 bool cvar::exists(const std::string cvar_name)
 {
