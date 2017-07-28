@@ -15,6 +15,7 @@ void cmd::init()
 	console::log("Initialization Commands...", "Core:Cmd_Init");
 	cmd::add("title", common::c_title, "Set window title");
 	cmd::add("exec", c_exec, "Execute config file");
+	cmd::add("help", c_help, "Get command list");
 }
 
 bool cmd::exists(const std::string cmd_name) {
@@ -28,6 +29,16 @@ std::string cmd::c_exec(std::vector<std::string> cmd_args)
 	}
 	exec(cmd_args[1]);
 	return "executing " + cmd_args[1] + "...";
+}
+
+std::string cmd::c_help(std::vector<std::string> cmd_args)
+{
+	std::string ret = "EBP "+common::getVersionName()+" commands:";
+	for (std::map <string, command> ::iterator it = commands.begin(); it != commands.end(); ++it)
+	{
+		ret += "\n"+it->first + " - " + it->second.desc;
+	}
+	return ret;
 }
 
 void cmd::add(const std::string cmd_name, func function, const std::string cmd_desc)

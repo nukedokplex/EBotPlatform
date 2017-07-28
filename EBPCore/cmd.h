@@ -21,4 +21,5 @@ namespace cmd
 	void init();
 	void exec(string cpath);
 	string c_exec(vector<string> cmd_args);
+	string c_help(vector<string> cmd_args);
 }
