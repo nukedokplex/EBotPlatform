@@ -12,61 +12,30 @@
 using namespace vk;
 using json = nlohmann::json;
 
-std::map<int, VKRequest> vkrs;
-
-void vk::init() {
-	console::log("Initialization VKWork...", "Core:VK_Init");
+void vk::init() 
+{
 	cvar::add("vk_token", "-", "Token on VKontakte");
 	cvar::add("vk_version", "5.63", "Api version on VK");
 }
 
-int vk::registerVkr(VKRequest vkr) {
-	int i = 0;
-	while (vkrs.find(i) != vkrs.end())
-		i++;
-	vkrs[i] = vkr;
-	return i;
+void vk::request::set(std::string param, std::string value) 
+{
+	this->params[param] = value.c_str();
 }
 
-int vk::create(std::string method, bool sendtoken) {
-	VKRequest vkr = VKRequest();
-	vkr.method = method;
-	vkr.sendtoken = sendtoken;
-	return vk::registerVkr(vkr);
-}
- 
-void vk::set(int vkrid, std::string p_name, std::string p_value) {
-	if (vkrs.find(vkrid) == vkrs.end())
-	{
-		console::error("VKRID not found", "vkwork");
-		return;
-	}
-	vkrs[vkrid].params[p_name] = p_value.c_str();
-}
-
-std::string vk::send(int vkrid) {
-	if (vkrs.find(vkrid) == vkrs.end())
-	{
-		console::error("VKRID not found", "vkwork");
-		return "";
-	}
-	std::string r = send(vkrs[vkrid].method, vkrs[vkrid].params, vkrs[vkrid].sendtoken);
-	vkrs.erase(vkrid);
-	return r;
+std::string vk::request::send()
+{
+	return vk::send(this->method, this->params, this->sendtoken);
 }
 
 std::string vk::getToken() {
 	return cvar::get("vk_token");
 }
 
-std::string vk::send(std::string method, std::map<std::string, std::string> params, bool sendtoken) {
+std::string vk::send(std::string method, std::map<std::string, std::string> params, bool sendtoken) 
+{
 	if (sendtoken)
 		params["access_token"] = cvar::get("vk_token");
 	params["v"] = cvar::get("vk_version");
-	std::string str = (std::string)(char *)(Net_Post("https://api.vk.com/method/" + method, params));
-	return str;
+	return (char *)(net::post("https://api.vk.com/method/" + method, params));
 }
-
-void vk::send_off(VKRequest vkr) {}
-
-

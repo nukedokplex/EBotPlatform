@@ -52,8 +52,8 @@ void longpoll::getServer()
 {
 	console::log("Get LongPoll server...", "Core:LongPoll");
 	// Send response
-	int getLongPollRequest = vk::create("messages.getLongPollServer");
-	json longpollinfo = json::parse(vk::send(getLongPollRequest).c_str());
+	vk::request getLongPollRequest = vk::request("messages.getLongPollServer");
+	json longpollinfo = json::parse(getLongPollRequest.send().c_str());
 	// Get values
 	string _server = longpollinfo.at("response").at("server");
 	string _key = longpollinfo.at("response").at("key");
@@ -67,17 +67,16 @@ void longpoll::getServer()
 void longpoll::loop() {
 	try {
 		// Set data
-		map<string, string> params;
-		params["act"] = "a_check";
-		params["key"] = key;
-		params["ts"] = to_string(ts);
-		params["wait"] = "25";
-		params["mode"] = "0";
-		params["version"] = "2";
+		net::request *longPollRequest = new net::request("https://" + server);
+		longPollRequest->set("act","a_check");
+		longPollRequest->set("key", key);
+		longPollRequest->set("ts", to_string(ts));
+		longPollRequest->set("wait", "25");
+		longPollRequest->set("mode", "0");
+		longPollRequest->set("version", "2");
 		// Send LongPoll request
-		char *response = (char *)Net_Post("https://" + server, params);
-		if (response != NULL)
-		{
+		string response = longPollRequest->send().c_str();
+
 			json data = json::parse(response);
 			// Check errors
 			if (data.find("failed") != data.end())
@@ -99,7 +98,7 @@ void longpoll::loop() {
 			ts = data.at("ts");// Update TS
 			data = 0;
 		}
-	}
+	
 	// Catch errors
 	catch (string e)
 	{// String errors

@@ -120,21 +120,19 @@
   <ItemGroup>
     <ClCompile Include="charsets.cpp" />
     <ClCompile Include="cmd.cpp" />
-    <ClCompile Include="common.cpp" />
+    <ClCompile Include="other.cpp" />
     <ClCompile Include="console.cpp" />
     <ClCompile Include="cvar.cpp" />
     <ClCompile Include="events.cpp" />
     <ClCompile Include="filesystem.cpp" />
-    <ClCompile Include="flags.cpp" />
     <ClCompile Include="host.cpp" />
     <ClCompile Include="inetwork.cpp" />
     <ClCompile Include="longpoll.cpp" />
     <ClCompile Include="mysql.cpp" />
-    <ClCompile Include="random.cpp" />
-    <ClCompile Include="regular.cpp" />
     <ClCompile Include="string_utils.cpp" />
     <ClCompile Include="userlogic.cpp" />
     <ClCompile Include="userlogic_api.cpp" />
+    <ClCompile Include="utils.cpp" />
     <ClCompile Include="vkwork.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -146,10 +144,12 @@
     <ClInclude Include="ebp_api.h" />
     <ClInclude Include="events.h" />
     <ClInclude Include="filesystem.h" />
+    <ClInclude Include="host.h" />
     <ClInclude Include="inetwork.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="longpoll.h" />
     <ClInclude Include="mysql.h" />
+    <ClInclude Include="other.h" />
     <ClInclude Include="userlogic.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="vkwork.h" />

@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="common.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="console.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
@@ -48,12 +45,6 @@
     <ClCompile Include="userlogic.cpp">
       <Filter>Файлы исходного кода\userlogic</Filter>
     </ClCompile>
-    <ClCompile Include="flags.cpp">
-      <Filter>Файлы исходного кода\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="random.cpp">
-      <Filter>Файлы исходного кода\utils</Filter>
-    </ClCompile>
     <ClCompile Include="charsets.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
@@ -66,14 +57,17 @@
     <ClCompile Include="longpoll.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="regular.cpp">
-      <Filter>Файлы исходного кода\utils</Filter>
-    </ClCompile>
     <ClCompile Include="mysql.cpp">
       <Filter>Файлы исходного кода\userlogic</Filter>
     </ClCompile>
     <ClCompile Include="string_utils.cpp">
       <Filter>Файлы исходного кода\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>Файлы исходного кода\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="other.cpp">
+      <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +114,12 @@
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="json.hpp">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="host.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="other.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
