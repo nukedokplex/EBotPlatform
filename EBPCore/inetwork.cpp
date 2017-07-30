@@ -1,76 +1,69 @@
+#include "curl/curl.h" // Use curl
 #include "common.h"
-#include "console.h"
-#include "cmd.h"
-#include "inetwork.h"
-#include "curl/curl.h"
-#include "cvar.h"
+#include "console.h" // console::error
+#include "cmd.h" // cmd::add
+#include "cvar.h" // cvar::add
+#include "filesystem.h"
+#include "inetwork.h" // this
 
 #pragma comment(lib,"libcurl_imp.lib") 
 
-struct MemoryStruct {
-	char *memory;
-	size_t size;
-};
-
-struct PostRequest {
-	std::string url;
-	std::map<std::string, std::string> params;
-};
-
-std::map<int, PostRequest> prs;
-
-void *myrealloc(void *ptr, size_t size)
+void net::init()
 {
-	/* There might be a realloc() out there that doesn't like reallocing
-	NULL pointers, so we take care of it here */
+	cmd::add("nettest", net::c_nettest, "Get server response");
+	cvar::add("net_agent", "ebotplatrorm-agent/" + to_string(VERSION), "User Agent on Net");
+}
+
+std::string net::c_nettest(std::vector<std::string> cmd_args)
+{
+	if (cmd_args.size() != 2)
+		return "Use \"nettest <url>\"";
+	void *ret = net::get(cmd_args[1]);
+	if (ret == NULL)
+		return "NETTEST UNKNOWN ERROR";
+	return (char *)ret;
+}
+
+string net::urlDecode(string str)
+{
+	std::string result;
+	char* esc_text = curl_easy_escape(NULL, str.c_str(), str.length());
+	if (!esc_text) throw std::runtime_error("Can not convert string to URL");
+
+	result = esc_text;
+	curl_free(esc_text);
+
+	return result;
+}
+
+void *net::dataRealloc(void *ptr, size_t size)
+{
 	if (ptr)
 		return realloc(ptr, size);
 	else
 		return malloc(size);
 }
-size_t
-WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data)
+
+size_t net::writeToBuffer(void *ptr, size_t size, size_t nmemb, void *data)
 {
 	size_t realsize = size * nmemb;
-	struct MemoryStruct *mem = (struct MemoryStruct *)data;
-	mem->memory = (char *)myrealloc(mem->memory, mem->size + realsize + 1);
-	if (mem->memory) {
-		memcpy(&(mem->memory[mem->size]), ptr, realsize);
-		mem->size += realsize;
-		mem->memory[mem->size] = 0;
+	net::buffer *buff = (net::buffer *)data;
+	buff->data = (char *)net::dataRealloc(buff->data, buff->size + realsize + 1);
+	if (buff->data) {
+		memcpy(&(buff->data[buff->size]), ptr, realsize);
+		buff->size += realsize;
+		buff->data[buff->size] = 0;
 	}
 	return realsize;
 }
 
 
-/*
-	Получить ответ сервера
-*/
-std::string Utf8_to_cp1251(const char *str);
-std::string Nettest_Command(std::vector<std::string> cmd_args)
+
+void *net::send(std::string url, const char *post) 
 {
-	if (cmd_args.size() != 2) {
-		return "Use \"nettest <url>\"";
-	}
-	void * ret = Net_Get(cmd_args[1]);
-	if (ret == NULL) {
-		return "NETTEST UNKNOW ERROR";
-	}
-	return (char *)ret;
-}
-
-void Net_Init() {
-	console::log("Initialization Network...", "Core:Net_Init");
-	cmd::add("nettest", Nettest_Command, "Get server response");
-	cvar::add("net_agent", "ebotplatrorm-agent/5.0", "User Agent on Net");
-}
-
-void *Net_Get(std::string url) {
 	CURL *curl;
-	CURLcode res;
-	struct MemoryStruct chunk;
-	chunk.memory = NULL;
-	chunk.size = 0;
+	net::buffer *buff = new net::buffer();
+
 	curl = curl_easy_init();
 	if (curl) {
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -78,74 +71,75 @@ void *Net_Get(std::string url) {
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-		res = curl_easy_perform(curl);
-		if (res != CURLE_OK)
-			console::log("curl_easy_perform() failed: " + (std::string)curl_easy_strerror(res), "Core:Net_Get");
-		curl_easy_cleanup(curl);
-		return chunk.memory;
-	}
-	return NULL;
-}
-
-void *Net_Post(std::string url, std::map<std::string, std::string> params) {
-	CURL *curl;
-	CURLcode res;
-	struct MemoryStruct chunk;
-	chunk.memory = NULL;
-	chunk.size = 0;
-	curl = curl_easy_init();
-	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, cvar::get("net_agent").c_str());
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-
-		std::string paramline = "";
-		std::map<std::string, std::string>::const_iterator iter;
-		for (iter = params.begin(); iter != params.end(); iter++) {
-			paramline+=iter->first+"="+curl_easy_escape(curl, iter->second.c_str(), iter->second.size())+"&";
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)buff);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, net::writeToBuffer);
+		if (post != NULL) {
+			curl_easy_setopt(curl, CURLOPT_POST, 1);
+			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post);
 		}
-		curl_easy_setopt(curl, CURLOPT_POST, 1);
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, paramline.c_str());
-
-		res = curl_easy_perform(curl);
-		if (res != CURLE_OK)
-			console::log("curl_easy_perform() failed: " + (std::string)curl_easy_strerror(res), "Core:Net_Post");
+		CURLcode code = curl_easy_perform(curl);
+		if (code != CURLE_OK) {
+			console::error("Can't connect to " + url, "Curl");
+			console::error(curl_easy_strerror(code), "Curl");
+		}
 		curl_easy_cleanup(curl);
-		return chunk.memory;
+		return buff->data;
 	}
 	return NULL;
 }
 
-
-// Helper Lua
-int Net_RegisterPR(PostRequest pr) {
-	int i = 0;
-	while (prs.find(i) != prs.end())
-		i++;
-	prs[i] = pr;
-	return i;
-}
-
-int Net_CreatePost(std::string url)
+void *net::get(std::string url)
 {
-	PostRequest pr = PostRequest();
-	pr.url = url;
-	return Net_RegisterPR(pr);
+	return net::send(url, NULL);
 }
 
-std::string cp1251_to_Utf8(const char *str);
-void Net_SetParam(int prid, std::string p_name, std::string p_value) {
-	prs[prid].params[p_name] = p_value.c_str();
+void *net::post(std::string url, const char *data) 
+{
+	return net::send(url, data);
 }
 
-std::string Net_Send(int prid) {
-	PostRequest pr = prs[prid];
-	prs.erase(prid);
-	return (char *)Net_Post(pr.url, pr.params);
+void *net::post(string url, map<string, string> params)
+{
+	// Build paramline
+	std::string paramline = "";
+	std::map<std::string, std::string>::const_iterator iter;
+	for (iter = params.begin(); iter != params.end(); iter++) {
+		paramline += iter->first + "=" + urlDecode(iter->second) + "&";
+	}
+	// Send
+	return net::send(url, paramline.c_str());
+}
+
+void net::request::set(std::string p_name, std::string p_value) 
+{
+	this->params[p_name] = p_value.c_str();
+}
+
+void net::request::setData(string data)
+{
+	this->data = (char *)data.c_str();
+}
+
+void net::request::setFile(string filepath)
+{
+	std::string line, text;
+	std::fstream in = fs::openFile(filepath);
+	while (std::getline(in, line))
+	{ 
+		text += line + "\n";
+	}
+	this->data = (char *)text.c_str();
+}
+
+string net::request::send() 
+{
+	void *data;
+	if (this->data == NULL)
+		data = net::post(this->url, this->params);
+	else
+		data = net::post(this->url, this->data);
+	if (data == NULL)
+		return "";
+	else
+		return (char *)data;
 }
