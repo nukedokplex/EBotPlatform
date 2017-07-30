@@ -10,6 +10,10 @@ namespace longpoll
 		std::string name;
 		bool dopValue;
 	};
+	extern map<int, update> longpollUpdates;
+	extern string server;
+	extern string key;
+	extern int ts;
 
 	void start();
 	void startLoop();

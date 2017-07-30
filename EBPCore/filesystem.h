@@ -4,8 +4,10 @@
 #include <vector>
 #include <fstream>
 
-extern std::string FS_GetFullPath(std::string path, bool inBotFolder = true);
-extern void FS_Init(std::string botdir);
-extern bool FS_Exists(std::string path, bool inBotFolder = true);
-extern std::fstream FS_OpenFile(std::string path, bool inBotFolder = true);
-extern std::string FS_GetRootPath();
+namespace fs
+{
+	void init(std::string botdir);
+	bool exists(std::string path, bool inBotFolder = true);
+	std::fstream openFile(std::string path, bool inBotFolder = true);
+	std::string getRootPath();
+}

@@ -3,6 +3,8 @@
 #include "../EBPCore/ebp_api.h"
 #include <string>
 #include <clocale>
+#include <conio.h> //Необходимые библиотеки
+#include <stdio.h>
 #include <locale>
 #include <windows.h> 
 #include "../EBPCore/utf8\utf8.h"
@@ -19,8 +21,50 @@ outputApi api_output = {
 };
 string Utf8_to_cp1251(const char *str);
 
-void WriteConsoleLine(std::string text) {
-	std::cout << Utf8_to_cp1251(text.data()) << std::endl;
+void SetColor(int text, int background)
+{
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hStdOut, (WORD)((background << 4) | text));
+}
+
+bool is_number(const char s[])
+{
+	char *e;
+	return s != NULL && !isspace(*s) && (strtol(s, &e, 10), *e == '\0');
+}
+
+void WriteConsoleLine(std::string text) 
+{
+	text = Utf8_to_cp1251(text.data());
+	SetColor(7,0);
+	// MY SUPER COLOR PARSING!!!
+	bool write_color = false;
+	std::string color = "";
+	for (int i = 0; i < text.size(); i++) {
+		if (write_color) {
+			if (text[i] == '}')
+			{
+				if (is_number(color.c_str())) {
+					if (color == "")
+						SetColor(7, 0);
+					else
+						SetColor(std::stoi(color), 0);
+				} else std::cout << "{" << color << "}";
+				write_color = false;
+			}
+			else
+				color += text[i];
+		}
+		else {
+			if (text[i] == '{')
+			{
+				color = "";
+				write_color = true;
+			}
+			else
+				std::cout << text[i];
+		}
+	}
 }
 
 void SetWindowTitle(std::string text) {

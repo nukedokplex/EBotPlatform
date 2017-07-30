@@ -5,23 +5,17 @@
 #include <vector>
 #include "filesystem.h"
 
-void FS_Init(std::string botdir)
+void fs::init(std::string botdir)
 {
-	console::log("Initialization Filesystem...", "Core:FS_Init");
 	cvar::add("bot_dir", botdir, "Bot directory");
 }
 
-std::string FS_GetFullPath(std::string path, bool inBotFolder)
-{
-	return "";
-}
-
-std::string FS_GetRootPath()
+std::string fs::getRootPath()
 {
 	return cvar::get("bot_dir") + "/";
 }
 
-bool FS_Exists(std::string path, bool inBotFolder)
+bool fs::exists(std::string path, bool inBotFolder)
 {
 	std::ifstream fin;
 	if (inBotFolder)
@@ -35,10 +29,10 @@ bool FS_Exists(std::string path, bool inBotFolder)
 	return false;
 }
 
-std::fstream FS_OpenFile(std::string path, bool inBotFolder)
+std::fstream fs::openFile(std::string path, bool inBotFolder)
 {
-	if (!FS_Exists(path, inBotFolder)) {
-		console::log("Error: " + path + " not found", "Core:FS_OpenFile");
+	if (!fs::exists(path, inBotFolder)) {
+		console::error(path + " not found", "Filesystem");
 		return std::fstream();
 	}
 	std::fstream fin;

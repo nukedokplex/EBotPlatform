@@ -18,7 +18,7 @@ void Sys_LoadEBP(void)
 	hEngine = LoadLibrary("EBPCore.dll");
 	Host_Main = (pfnInit)GetProcAddress(hEngine, "Host_Main");
 	Host_Shutdown = (pfnShutdown)GetProcAddress(hEngine, "Host_Shutdown");
-	api_output.writeline("EBPCore.dll has been loaded");
+	api_output.writeline("{8}EBPCore.dll has been loaded\n");
 }
 
 void Sys_UnloadEngine(void)
@@ -29,13 +29,11 @@ void Sys_UnloadEngine(void)
 void instructionLoop();
 int main()
 {
-	setlocale(LC_ALL, "ru_RU.UTF-8");
 	std::locale::global(std::locale(""));
-	system("chcp 65001");
 
 	Sys_LoadEBP();
 	api_input = Host_Main(BOT_PATH, api_output);
-	api_input.Console_Log("Start instructionLoop()...", "Launcher:main");
+	api_input.Console_Log("Starting instructionLoop()...", "Launcher");
 	instructionLoop();
 	return 0;
 }

@@ -23,44 +23,35 @@ extern "C" {
 
 using namespace luabridge;
 
-
-std::string ReUL_Command(std::vector<std::string> cmd_args);
-void UL_Free();
-
 lua_State* LuaScript;
 bool LuaRun;
 
-void UL_Init()
+void userlogic::init()
 {
-	console::log("Initialization UserLogic...", "Core:UL_Init");
-	cmd::add("relua", ReUL_Command, "Reload UserLogic");
+	cmd::add("relua", userlogic::c_relua, "Reload UserLogic");
 	cvar::add("dll_path", "scripts/main.lua", "Path to DLL");
 }
 
-/*
-Команда перезагрузки UserLogic
-*/
-void UL_RegisterAPI();
-void UL_LogError(luabridge::LuaException error);
-void UL_Start() {
+void userlogic::start() 
+{
 	try {
-		console::log("Start UL in \"" + cvar::get("dll_path") + "\"", "Core:UL_Start");
+		console::log("Starting at \"" + cvar::get("dll_path") + "\"", "UserLogic");
 		// Load
 		LuaScript = luabridge::luaL_newstate();
 		luaL_openlibs(LuaScript);
-		UL_RegisterAPI();
+		userlogic::api::registerApi();
 		lua_checkstack(LuaScript, 2048);
 		luaL_dofile(LuaScript, ("bot/" + cvar::get("dll_path")).c_str());
 		lua_pcall(LuaScript, 0, 0, 0);
 		LuaRun = true;
-		UL_Call("Main");
+		userlogic::call("Main");
 	}
 	catch (luabridge::LuaException const& e) {
-		UL_LogError(e);
+		userlogic::logError(e);
 	}
 }
 
-void UL_Call(std::string method)
+void userlogic::call(std::string method)
 {
 	while (!LuaRun)
 	{
@@ -72,11 +63,11 @@ void UL_Call(std::string method)
 			func();
 	}
 	catch (luabridge::LuaException const& e) {
-		UL_LogError(e);
+		userlogic::logError(e);
 	}
 }
 
-void UL_CallEvent(std::string method, int sid)
+void userlogic::callEvent(std::string method, int sid)
 {
 	while (!LuaRun)
 	{
@@ -89,23 +80,22 @@ void UL_CallEvent(std::string method, int sid)
 			func(sid);
 	}
 	catch (luabridge::LuaException const& e) {
-		UL_LogError(e);
+		userlogic::logError(e);
 	}
-	lua_gc(LuaScript, LUA_GCCOLLECT, 0);
 }
 
-void UL_Free() {
+void userlogic::free() {
 	LuaRun = false;
 	lua_close(LuaScript);
 }
 
-void UL_LogError(luabridge::LuaException error) {
+void userlogic::logError(luabridge::LuaException error) {
 	console::error(error.what(), "Lua");
 }
 
-std::string ReUL_Command(std::vector<std::string> cmd_args)
+std::string userlogic::c_relua(std::vector<std::string> cmd_args)
 {
-	UL_Free();
-	UL_Start();
+	userlogic::free();
+	userlogic::start();
 	return "UserLogic reloaded";
 }

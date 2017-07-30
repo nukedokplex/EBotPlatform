@@ -80,12 +80,11 @@ void Event_Register (std::string name, std::string func)
 	lock[name] = false;
 }
 
-void UL_CallEvent(std::string method, int sid);
 void Event_Call (std::string name, int stack_id)
 {
 	if (events.find(name) != events.end())
 	{
-		UL_CallEvent(events.find(name)->second, stack_id);
+		userlogic::callEvent(events.find(name)->second, stack_id);
 	}
 	Event_Flush(stack_id);
 }

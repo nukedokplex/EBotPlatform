@@ -2,6 +2,7 @@
 #include "common.h"
 #include "console.h"
 #include "cmd.h"
+#include "other.h"
 #include <map>
 #include <vector>
 using namespace cvar;
@@ -15,7 +16,7 @@ void cvar::init()
 
 std::string cvar::c_cvars(std::vector<std::string> cmd_args)
 {
-	std::string ret = "EBP " + common::getVersionName() + " cvars:";
+	std::string ret = "\nEBP " + other::getVersionName() + " cvars:";
 	for (std::map <std::string, cvar_s> ::iterator it = cvars.begin(); it != cvars.end(); ++it)
 	{
 		ret += "\n" + it->first + " - " + it->second.desc;

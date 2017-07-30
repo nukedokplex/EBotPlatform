@@ -1,19 +1,16 @@
-#include <map>
-#include <thread>
-#include "inetwork.h"
+#include "common.h"
+#include <thread> // std::thread
+#include "inetwork.h" // 
 #include "events.h"
-#include "longpoll.h"
 #include "vkwork.h"
+#include "longpoll.h"
 
-using namespace std;
 using namespace longpoll;
 
-
-map<int, update> longpollUpdates;
-
-string server;
-string key;
-int ts;
+map<int, update> longpoll::longpollUpdates;
+string longpoll::server;
+string longpoll::key;
+int longpoll::ts;
 
 void longpoll::start()
 {
@@ -50,7 +47,7 @@ void longpoll::startLoop()
 
 void longpoll::getServer()
 {
-	console::log("Get LongPoll server...", "Core:LongPoll");
+	console::log("Getting LongPoll server...", "LongPoll");
 	// Send response
 	vk::request getLongPollRequest = vk::request("messages.getLongPollServer");
 	json longpollinfo = json::parse(getLongPollRequest.send().c_str());
@@ -102,11 +99,11 @@ void longpoll::loop() {
 	// Catch errors
 	catch (string e)
 	{// String errors
-		console::error("Error ("+e+"), reconnect...", "Core:LongPoll");
+		console::error("Error ("+e+"), reconnect...", "LongPoll");
 	}
 	catch (...) 
-	{// Unknow errors
-		console::error("Unknow error, reconnect...", "Core:LongPoll");
+	{// Unknown errors
+		console::error("Unknown error, reconnect...", "LongPoll");
 	}
 }
 

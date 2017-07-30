@@ -5,6 +5,7 @@
 #include "console.h"
 #include "cvar.h"
 #include "filesystem.h"
+#include "other.h"
 
 using namespace cmd;
 
@@ -12,8 +13,7 @@ std::map<std::string, command> commands;
 
 void cmd::init()
 {
-	console::log("Initialization Commands...", "Core:Cmd_Init");
-	cmd::add("title", common::c_title, "Set window title");
+	cmd::add("title", other::c_title, "Set window title");
 	cmd::add("exec", c_exec, "Execute config file");
 	cmd::add("help", c_help, "Get command list");
 }
@@ -33,7 +33,7 @@ std::string cmd::c_exec(std::vector<std::string> cmd_args)
 
 std::string cmd::c_help(std::vector<std::string> cmd_args)
 {
-	std::string ret = "EBP "+common::getVersionName()+" commands:";
+	std::string ret = "\nEBP "+other::getVersionName()+" commands:";
 	for (std::map <string, command> ::iterator it = commands.begin(); it != commands.end(); ++it)
 	{
 		ret += "\n"+it->first + " - " + it->second.desc;
@@ -116,7 +116,7 @@ std::vector<std::string> cmd::parse(std::string text)
 void cmd::exec(std::string cpath)
 {
 	std::string s;
-	std::fstream file = FS_OpenFile(cpath);
+	std::fstream file = fs::openFile(cpath);
 	while (std::getline(file, s)) {
 		if (s=="" || s.front() == '#')
 			continue;

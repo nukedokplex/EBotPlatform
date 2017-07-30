@@ -10,6 +10,7 @@
 #include "../common/b_api.h"
 #include "events.h"
 #include "utils.h"
+#include "other.h"
 // --
 #include <LuaBridge.h>
 
@@ -21,10 +22,8 @@ extern "C" {
 
 extern luabridge::lua_State* LuaScript;
 
-luabridge::LuaRef API_Cmd_ParseArgs(std::string text);
-std::string API_Net_Get(std::string url);
 
-void UL_RegisterAPI()
+void userlogic::api::registerApi()
 {
 	// CMD
 	luabridge::getGlobalNamespace(LuaScript)
@@ -33,7 +32,7 @@ void UL_RegisterAPI()
 		//.addFunction("add", cmd::add); -- TODO add Lua functions
 		.addFunction("exists", cmd::exists)
 		.addFunction("exe", cmd::exe)
-		.addFunction("parse", API_Cmd_ParseArgs)
+		.addFunction("parse", userlogic::api::cmd_ParseArgs)
 	.endNamespace();
 
 	// Consoló
@@ -65,29 +64,35 @@ void UL_RegisterAPI()
 		.addFunction("call", Event_Call)
 	.endNamespace();
 	// Filesystem
-	/*n.
-		beginNamespace("filesystem")
-		.addFunction("exists", FS_Exists)
-		.addFunction("root", FS_GetRootPath)
-		.addFunction("full", FS_GetFullPath)
-		.addFunction("open", FS_OpenFile)
-		.endNamespace();*/
+	luabridge::getGlobalNamespace(LuaScript)
+	.beginNamespace("filesystem")
+		.addFunction("exists", fs::exists)
+		.addFunction("root", fs::getRootPath)
+	.endNamespace();
 	// Network
 	luabridge::getGlobalNamespace(LuaScript)
 	.beginNamespace("net")
-		.addFunction("get", API_Net_Get)
-		.addFunction("create", Net_CreatePost)
-		.addFunction("set", Net_SetParam)
-		.addFunction("send", Net_Send)
+		.addFunction("get", userlogic::api::net_Get)
+		.beginClass <net::request>("request")
+			.addConstructor <void(*) (string)>()
+			.addFunction("set", &net::request::set)
+			.addFunction("setFile", &net::request::setFile)
+			.addFunction("setData", &net::request::setData)
+			.addFunction("send", &net::request::send)
+		.endClass()
 	.endNamespace();
 	// VKWORK
 	luabridge::getGlobalNamespace(LuaScript)
 		.beginNamespace("vk")
-		.addFunction("create", vk::create)
-		.addFunction("set", vk::set)
-		.addFunction("send", (std::string(*)(int))vk::send)
-		.addFunction("send_off", vk::send_off)
 		.addFunction("getToken", vk::getToken)
+		.beginClass <vk::request>("request")
+			.addConstructor <void(*) (string, bool)>()
+			.addConstructor <void(*) (string)>()
+			.addData("method", &vk::request::method)
+			.addData("sendtoken", &vk::request::sendtoken)
+			.addFunction("set", &vk::request::set)
+			.addFunction("send", &vk::request::send)
+		.endClass()
 	.endNamespace();
 	// Flags
 	luabridge::getGlobalNamespace(LuaScript)
@@ -107,16 +112,40 @@ void UL_RegisterAPI()
 		.addFunction("lower", utils::string::lower)
 		.addFunction("upper", utils::string::upper)
 	.endNamespace();
+	// Random
+	luabridge::getGlobalNamespace(LuaScript)
+		.beginNamespace("random")
+		.addFunction("get", utils::random::get)
+		.endNamespace();
 	// Other
 	luabridge::getGlobalNamespace(LuaScript)
 		.addFunction("changeCharset", Charset_Change)
-		.addFunction("getVersionName", common::getVersionName);
+		.addFunction("getVersionName", other::getVersionName)
+		.addFunction("connect", userlogic::api::connect)
+		.addFunction("connectModule", userlogic::api::connectModule);
+
+	// Connect default modules
+	luabridge::setGlobal(LuaScript, luabridge::getGlobal(LuaScript, "require")("data/lua/json"), "JSON");
+	luabridge::getGlobal(LuaScript, "require")("data/lua/LuaTools");
+	luabridge::setGlobal(LuaScript, luabridge::getGlobal(LuaScript, "require")("data/lua/ErrorSystem"), "ErrorSystem");
+	luabridge::setGlobal(LuaScript, luabridge::getGlobal(LuaScript, "require")("data/lua/EbpTools"), "EbpTools");
 }
 
 // API \\
+// Connect script
+luabridge::LuaRef userlogic::api::connect(std::string text) 
+{
+	return luabridge::getGlobal(LuaScript, "require")(fs::getRootPath()+text);
+}
 
-// Console
-luabridge::LuaRef API_Cmd_ParseArgs(std::string text) {
+// Connect module
+void userlogic::api::connectModule(std::string text)
+{
+	luabridge::LuaRef r = userlogic::api::connect("scripts/modules/"+text);
+	luabridge::setGlobal(LuaScript, r, text.c_str());
+}
+
+luabridge::LuaRef userlogic::api::cmd_ParseArgs(std::string text) {
 	std::vector<std::string> or = cmd::parse(text);
 	luabridge::LuaRef r = luabridge::newTable(LuaScript);
 	for (int i = 0;i < or.size();i++)
@@ -124,7 +153,7 @@ luabridge::LuaRef API_Cmd_ParseArgs(std::string text) {
 	return r;
 }
 
-std::string API_Net_Get(std::string url)
+std::string userlogic::api::net_Get(std::string url)
 {
-	return (std::string)(char*)Net_Get(url);
+	return (std::string)(char*)net::get(url);
 }

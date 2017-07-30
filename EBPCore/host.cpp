@@ -9,6 +9,9 @@
 #include "userlogic.h"
 #include "longpoll.h"
 #include "mysql.h"
+#include "utils.h"
+#include "other.h"
+#include "host.h"
 
 inputApi api_input = {
 	console::log,
@@ -18,24 +21,23 @@ outputApi api_output;
 
 inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 {
-	setlocale(LC_ALL, "ru_RU.UTF-8");
-	system("chcp 65001");
-	 // вызов функции настройки локали
-
 	api_output = api;
-	console::log("Initialization EBotPlatform "+common::getVersionName(), "Core:Host_Main");
-	FS_Init(botname);
+	console::init(botname);
+	console::log("Initializing EBotPlatform "+other::getVersionName(), "Core");
+	// Init systems
+	fs::init(botname);
 	cmd::init();
 	cvar::init();
-	Net_Init();
+	net::init();
 	vk::init();
-	UL_Init();
+	utils::init();
+	userlogic::init();
 	mysql::utils::init();
 
 	cmd::exec("config.cfg");
 
 	mysql::utils::start();
-	UL_Start();
+	userlogic::start();
 	longpoll::start();
 
 
