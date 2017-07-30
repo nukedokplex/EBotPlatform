@@ -119,6 +119,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\EBPCore\ebp_api.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="favicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="EBPLauncher.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
