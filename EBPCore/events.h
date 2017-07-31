@@ -1,16 +1,36 @@
 #pragma once
+#include "common.h"
 
-// Push
-void Event_PushString(int id, std::string value);
-void Event_PushInt(int id, int value);
-void Event_PushFloat(int id, float value);
-// Get
-std::string Event_GetString(int id);
-int Event_GetInt(int id);
-float Event_GetFloat(int id);
-// Work
-void Event_Flush(int id);
-int Event_New();
-void Event_Register(std::string name, std::string func);
-void Event_Call(std::string name, int stack_id);
-bool Event_Exists(std::string name);
+namespace events
+{
+	class caller
+	{
+	private:
+		string name;
+		vector<void*> stack;
+		int stack_pos;
+	public:
+		caller(string name)
+		{
+			this->name = name;
+			this->stack = vector<void*>();
+			this->stack_pos = 0;
+		}
+		// Push
+		void pushString(string value);
+		void pushInt(int value);
+		void pushFloat(float value);
+		// Get
+		string getString();
+		int getInt();
+		float getFloat();
+		// Work
+		void call();
+	};
+	// Variables
+	extern map<string, string> events;
+	// Voids
+	void registerEvent(string name, string func);
+	events::caller *create(string name);
+	bool exists(string name);
+};

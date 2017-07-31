@@ -111,13 +111,12 @@ void longpoll::getUpdate(json *update) {
 	int code = update->at(0);
 	longpoll::update *upd = &longpollUpdates[code];
 
-	if (!Event_Exists(upd->name))
-		return;
-	int eid = Event_New();
-	Event_PushInt(eid, update->at(1));
-	Event_PushInt(eid, update->at(2));
-	if(upd->dopValue)
-		Event_PushInt(eid, update->at(3));
-	std::thread loopthread(Event_Call, upd->name, eid);
-	loopthread.detach();
+	if (events::caller *caller = events::create(upd->name))
+	{
+		caller->pushInt(update->at(1));
+		caller->pushInt(update->at(2));
+		if (upd->dopValue)
+			caller->pushInt(update->at(3));
+		caller->call();
+	}
 }

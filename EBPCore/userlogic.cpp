@@ -67,7 +67,7 @@ void userlogic::call(std::string method)
 	}
 }
 
-void userlogic::callEvent(std::string method, int sid)
+void userlogic::callEvent(std::string method, events::caller *ev)
 {
 	while (!LuaRun)
 	{
@@ -77,7 +77,8 @@ void userlogic::callEvent(std::string method, int sid)
 	try {
 		luabridge::LuaRef func = luabridge::getGlobal(state, method.c_str());
 		if (func.isFunction())
-			func(sid);
+			func(ev);
+		delete ev;
 	}
 	catch (luabridge::LuaException const& e) {
 		userlogic::logError(e);

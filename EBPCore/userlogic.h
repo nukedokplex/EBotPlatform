@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
-#include <vector>
+#include "common.h"
+#include "events.h"
 #include <LuaBridge.h>
 
 namespace userlogic
@@ -8,7 +8,7 @@ namespace userlogic
 	void init();
 	void start();
 	void call(std::string method);
-	void callEvent(std::string method, int evnum);
+	void callEvent(std::string method, events::caller *ev);
 	void free();
 	void logError(luabridge::LuaException error);
 	std::string c_relua(std::vector<std::string> cmd_args);

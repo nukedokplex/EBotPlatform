@@ -52,17 +52,12 @@ void userlogic::api::registerApi()
 	.endNamespace();
 	// Events
 	luabridge::getGlobalNamespace(LuaScript)
-	.beginNamespace("event")
-		.addFunction("pushString", Event_PushString)
-		.addFunction("pushInt", Event_PushString)
-		.addFunction("pushFloat", Event_PushString)
-		.addFunction("getString", Event_GetString)
-		.addFunction("getInt", Event_GetInt)
-		.addFunction("getFloat", Event_GetFloat)
-		.addFunction("flush", Event_Flush)
-		.addFunction("register", Event_Register)
-		.addFunction("call", Event_Call)
-	.endNamespace();
+		.beginClass <events::caller>("event")
+		.addStaticFunction("register", events::registerEvent)
+		.addFunction("getString", &events::caller::getString)
+		.addFunction("getInt", &events::caller::getInt)
+		.addFunction("getFloat", &events::caller::getFloat)
+		.endClass();
 	// Filesystem
 	luabridge::getGlobalNamespace(LuaScript)
 	.beginNamespace("filesystem")

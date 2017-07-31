@@ -1,95 +1,70 @@
-#include <map>
-#include <windows.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
 #include <thread>
-#include <vector>
 #include "events.h"
 #include "userlogic.h"
 
-std::map<std::string, std::string> events;
-std::map<std::string, bool> lock;
-
-std::map<int, std::vector<void*>> stacks;
-std::map<int, int> stack_it;
+map<string, string> events::events;
 
 // Push
 
-void Event_PushString(int id, std::string value)
+void events::caller::pushString(string value)
 {
-	stacks[id].push_back((void*)value.c_str());
+	this->stack.push_back((void*)value.c_str());
 }
 
-void Event_PushInt(int id,int value)
+void events::caller::pushInt(int value)
 {
-	stacks[id].push_back((void*)value);
+	this->stack.push_back((void*)value);
 }
 
-void Event_PushFloat(int id,float value)
+void events::caller::pushFloat(float value)
 {
-	stacks[id].push_back((void*)&value);
+	this->stack.push_back((void*)&value);
 }
 
 // Get
 
-std::string Event_GetString(int id)
+std::string events::caller::getString()
 {
-	void *value = stacks[id][stack_it[id]];
-	stack_it[id]++;
+	void *value = this->stack[this->stack_pos];
+	this->stack_pos++;
 	return (std::string)(char*)value;
 }
 
-int Event_GetInt(int id)
+int events::caller::getInt()
 {
-	void *value = stacks[id][stack_it[id]];
-	stack_it[id]++;
+	void *value = this->stack[this->stack_pos];
+	this->stack_pos++;
 	return (int)value;
 }
 
-float Event_GetFloat(int id)
+float events::caller::getFloat()
 {
-	void *value = stacks[id][stack_it[id]];
-	stack_it[id]++;
+	void *value = this->stack[this->stack_pos];
+	this->stack_pos++;
 	return *(float *)&value;// WTF??
 }
 
 // Work
 
-void Event_Flush(int id)
+void events::caller::call ()
 {
-	if (stacks.size()==0 || stacks.find(id) == stacks.end())
-		return;// WTF?
-	stacks.erase(id);
-	stack_it.erase(id);
+	std::thread loopthread(userlogic::callEvent, events::events[this->name], this);
+	loopthread.detach();
 }
 
-int Event_New()
+void events::registerEvent(string name, string func)
 {
-	int i = 0;
-	while (stacks.find(i) != stacks.end())
-		i++;
-	stacks[i] = std::vector<void*>();
-	stack_it[i] = 0;
-	return i;
+	events::events[name] = func;
 }
 
-void Event_Register (std::string name, std::string func)
+events::caller *events::create(string ev_name)
 {
-	events[name] = func;
-	lock[name] = false;
+	if (!events::exists(ev_name))
+		return NULL;
+	return new events::caller(ev_name);
 }
 
-void Event_Call (std::string name, int stack_id)
-{
-	if (events.find(name) != events.end())
-	{
-		userlogic::callEvent(events.find(name)->second, stack_id);
-	}
-	Event_Flush(stack_id);
-}
-
-bool Event_Exists(std::string name)
+bool events::exists(string name)
 {
 	return events.find(name) != events.end();
 }
