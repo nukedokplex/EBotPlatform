@@ -25,10 +25,10 @@ void console::init(string botdir)
 void console::log(std::string text, std::string type) 
 {
 	if (FILE *file = fopen(filename.c_str(), "a")) {
-		fprintf(file, ("{1}[" + other::getCurrentTime() + "]{2}[" + type + "{2}]:{} " + text + "\n").c_str());
+		fprintf(file, ("{1}[" + other::getCurrentTime() + "]{9}[{2}" + type + "{9}]:{} " + text + "\n").c_str());
 		fclose(file);
 	}
-	api_output.writeline("{2}["+ type +"{2}]:{} "+ text +"\n");
+	api_output.writeline("{9}[{2}"+ type +"{9}]:{} "+ text +"\n");
 }
 
 void console::error(std::string text, std::string type) 
