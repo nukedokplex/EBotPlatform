@@ -12,6 +12,7 @@
 #include "utils.h"
 #include "other.h"
 #include "host.h"
+#include "eapi.h"
 
 inputApi api_input = {
 	console::log,
@@ -29,6 +30,7 @@ inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 	cmd::init();
 	cvar::init();
 	net::init();
+	eapi::init();
 	vk::init();
 	utils::init();
 	userlogic::init();
@@ -36,6 +38,7 @@ inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 
 	cmd::exec("config.cfg");
 
+	eapi::start();
 	mysql::utils::start();
 	userlogic::start();
 	longpoll::start();
@@ -43,6 +46,12 @@ inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 
 	atexit(Host_Shutdown);
 	return api_input;
+}
+
+void Host_End()
+{
+	system("PAUSE");
+	exit(0);
 }
 
 /*
