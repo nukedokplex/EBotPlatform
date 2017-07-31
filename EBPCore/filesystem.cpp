@@ -42,3 +42,18 @@ std::fstream fs::openFile(std::string path, bool inBotFolder)
 		fin.open(path);
 	return fin;
 }
+
+void fs::writeData(string path, string data, bool inBotFolder)
+{
+	if (inBotFolder)
+		path = cvar::get("bot_dir") + "/" + path;
+	if (FILE *file = fopen(path.c_str(), "a")) {
+		fprintf(file, data.c_str());
+		fclose(file);
+	}
+}
+
+void fs::safeWriteData(string path, string data, bool inBotFolder)
+{
+	// TODO
+}
