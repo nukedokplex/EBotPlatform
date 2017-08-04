@@ -115,12 +115,31 @@ std::vector<std::string> cmd::parse(std::string text)
 
 void cmd::exec(std::string cpath)
 {
-	std::string s;
-	std::fstream file = fs::openFile(cpath);
-	while (std::getline(file, s)) {
-		if (s=="" || s.front() == '#')
+	fs::file *in = fs::open(cpath,true,2);
+	
+	string data;
+	string line;
+
+	 while (getline(in->_stream, line)) 
+	 {
+		if (line =="" || line.front() == '#')
 			continue;
-		exe(s);
+		exe(line);
 	}
-	file.close();
+	in->close();
+}
+
+string cmd::data(luabridge::LuaRef cmd_args, int sub)
+{
+
+}
+
+string cmd::data(args cmd_args, int sub)
+{
+	string ret = "";
+	for (int i = sub; i < cmd_args.size(); i++)
+	{
+		ret += " " + cmd_args[i];
+	}
+	return ret.substr(1);
 }

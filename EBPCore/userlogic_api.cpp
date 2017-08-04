@@ -56,7 +56,6 @@ void userlogic::api::registerApi()
 		.addStaticFunction("register", events::registerEvent)
 		.addFunction("getString", &events::caller::getString)
 		.addFunction("getInt", &events::caller::getInt)
-		.addFunction("getFloat", &events::caller::getFloat)
 		.endClass();
 	// Filesystem
 	luabridge::getGlobalNamespace(LuaScript)
@@ -67,7 +66,7 @@ void userlogic::api::registerApi()
 	// Network
 	luabridge::getGlobalNamespace(LuaScript)
 	.beginNamespace("net")
-		.addFunction("get", userlogic::api::net_Get)
+		.addFunction("get", net::get)
 		.beginClass <net::request>("request")
 			.addConstructor <void(*) (string)>()
 			.addFunction("set", &net::request::set)
@@ -146,9 +145,4 @@ luabridge::LuaRef userlogic::api::cmd_ParseArgs(std::string text) {
 	for (int i = 0;i < or.size();i++)
 		r[i+1] = (std::string)or[i];
 	return r;
-}
-
-std::string userlogic::api::net_Get(std::string url)
-{
-	return (std::string)(char*)net::get(url);
 }

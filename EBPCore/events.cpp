@@ -16,11 +16,6 @@ void events::caller::pushInt(int value)
 	this->stack.push_back((void*)value);
 }
 
-void events::caller::pushFloat(float value)
-{
-	this->stack.push_back((void*)&value);
-}
-
 // Get
 
 std::string events::caller::getString()
@@ -35,13 +30,6 @@ int events::caller::getInt()
 	void *value = this->stack[this->stack_pos];
 	this->stack_pos++;
 	return (int)value;
-}
-
-float events::caller::getFloat()
-{
-	void *value = this->stack[this->stack_pos];
-	this->stack_pos++;
-	return *(float *)&value;// WTF??
 }
 
 // Work

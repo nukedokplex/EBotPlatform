@@ -19,7 +19,7 @@ std::string other::c_title(std::vector<std::string> cmd_args)
 }
 
 std::string other::getVersionName() {
-	return "A_" + std::to_string((int)(VERSION * 10.0f));
+	return VERSION;
 }
 
 string other::getCurrentTime()

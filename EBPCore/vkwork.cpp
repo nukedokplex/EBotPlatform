@@ -37,5 +37,5 @@ std::string vk::send(std::string method, std::map<std::string, std::string> para
 	if (sendtoken)
 		params["access_token"] = cvar::get("vk_token");
 	params["v"] = cvar::get("vk_version");
-	return (char *)(net::post("https://api.vk.com/method/" + method, params));
+	return net::post("https://api.vk.com/method/" + method, params);
 }

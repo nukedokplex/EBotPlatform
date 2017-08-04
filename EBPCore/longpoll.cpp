@@ -107,7 +107,8 @@ void longpoll::loop() {
 	}
 }
 
-void longpoll::getUpdate(json *update) {
+void longpoll::getUpdate(json *update) 
+{
 	int code = update->at(0);
 	longpoll::update *upd = &longpollUpdates[code];
 

@@ -22,4 +22,5 @@ namespace cmd
 	void exec(string cpath);
 	string c_exec(vector<string> cmd_args);
 	string c_help(vector<string> cmd_args);
+	string data(args cmd_args, int sub);
 }

@@ -7,16 +7,16 @@ namespace net
 	void init();
 	string c_nettest(vector<string> cmd_args);
 	string urlDecode(string str);
-	void *dataRealloc(void *ptr, size_t size);
-	size_t writeToBuffer(void *ptr, size_t size, size_t nmemb, void *data);
-	void *send(std::string url, const char *post = NULL);
-	void *get(string url);
-	void *post(string url, const char *data);
-	void *post(string url, map<string, string> params);
+	size_t writeToBuffer(char *ptr, size_t size, size_t nmemb, void *data);
+	size_t writeToFile(char *ptr, size_t size, size_t nmemb, void *data);
+	string send(std::string url, const char *post = NULL, string file = "");
+	string get(string url);
+	string post(string url, const char *data);
+	string post(string url, map<string, string> params);
 	void init();
 
 	struct buffer {
-		char *data;
+		string data;
 		size_t size;
 	};
 
@@ -26,6 +26,10 @@ namespace net
 		map<string, string> params;
 		char *data;
 	public:
+		// Variables
+		bool isEnd; // is request has sended
+		int size; // data size
+		// Voids
 		request(string url)
 		{
 			this->url = url;
@@ -35,5 +39,8 @@ namespace net
 		void setData(string data);
 		void setFile(string filepath);
 		string send();
+		void download(string path);
+		string send_off();
+		void download_off(string path);
 	};
 };

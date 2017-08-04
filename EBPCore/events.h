@@ -19,11 +19,9 @@ namespace events
 		// Push
 		void pushString(string value);
 		void pushInt(int value);
-		void pushFloat(float value);
 		// Get
 		string getString();
 		int getInt();
-		float getFloat();
 		// Work
 		void call();
 	};
