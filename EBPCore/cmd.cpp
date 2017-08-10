@@ -6,6 +6,7 @@
 #include "cvar.h"
 #include "filesystem.h"
 #include "other.h"
+#include <LuaBridge.h>
 
 using namespace cmd;
 
@@ -129,15 +130,17 @@ void cmd::exec(std::string cpath)
 	in->close();
 }
 
-string cmd::data(luabridge::LuaRef cmd_args, int sub)
-{
 
-}
 
 string cmd::data(args cmd_args, int sub)
 {
+	if (cmd_args.size() < sub)
+	{
+		console::error("sub>args", "cmd::data");
+		return "";
+	}
 	string ret = "";
-	for (int i = sub; i < cmd_args.size(); i++)
+	for (int i = sub-1; i < cmd_args.size(); i++)
 	{
 		ret += " " + cmd_args[i];
 	}

@@ -1,19 +1,12 @@
-#include "userlogic.h"
 #include "common.h"
-#include "console.h"
-#include "cmd.h"
-#include "inetwork.h"
-#include "filesystem.h"
-#include "cvar.h"
-#include "vkwork.h"
-#include "../common/b_api.h"
-#include "events.h"
-#include <string>
-#include <locale>
-#include <cstdlib> // для system
-#include <windows.h>
-#include <iostream>
+#include "userlogic.h"
+#include "console.h" // console::log; console::error
+#include "cmd.h" // cmd::add
+#include "cvar.h" // cvar::add
+#include "events.h" // events::caller
+#include <windows.h> // Sleep
 #include <LuaBridge.h>
+#include "utils.h"
 
 extern "C" {
 # include "lua.h"
@@ -21,14 +14,17 @@ extern "C" {
 # include "lualib.h"
 }
 
-using namespace luabridge;
+using namespace userlogic;
 
-lua_State* LuaScript;
-bool LuaRun;
+luabridge::lua_State* userlogic::LuaScript;
+bool userlogic::isWorking;
+bool userlogic::isCrash;
+int userlogic::loadedModules = 0;
+int userlogic::workedThreads = 0;
 
 void userlogic::init()
 {
-	cmd::add("relua", userlogic::c_relua, "Reload UserLogic");
+	cmd::add("relua", c_relua, "Reload UserLogic");
 	cvar::add("dll_path", "scripts/main.lua", "Path to DLL");
 }
 
@@ -39,64 +35,105 @@ void userlogic::start()
 		// Load
 		LuaScript = luabridge::luaL_newstate();
 		luaL_openlibs(LuaScript);
-		userlogic::api::registerApi();
+		api::registerApi();// Init api
 		lua_checkstack(LuaScript, 2048);
-		luaL_dofile(LuaScript, ("bot/" + cvar::get("dll_path")).c_str());
-		lua_pcall(LuaScript, 0, 0, 0);
-		LuaRun = true;
-		userlogic::call("Main");
+		
+		int code = luaL_dofile(LuaScript, ("bot/" + cvar::get("dll_path")).c_str());
+
+		if (code != LUABRIDGE_LUA_OK)
+			throw luabridge::LuaException(LuaScript, code);
+
+
+		luabridge::LuaRef funcModules = luabridge::getGlobal(LuaScript, "LoadModules");
+		if (!funcModules.isNil() && funcModules.isFunction())
+			funcModules();// Loading modules
+		else
+			throw string("Function \"LoadModules()\" not found");
+		console::log("Loaded " + to_string(loadedModules) + " modules.", "UserLogic");
+		luabridge::LuaRef funcMain = luabridge::getGlobal(LuaScript, "Main");
+		if (!funcMain.isNil() && funcMain.isFunction())
+			funcMain();// Init script
+		else
+			throw string("Function \"Main()\" not found");
+
+		userlogic::isWorking = true;
+		userlogic::isCrash = false;
 	}
 	catch (luabridge::LuaException const& e) {
-		userlogic::logError(e);
+		isCrash = true;
+		logError(e);
+	}
+	catch (string &e) {
+		isCrash = true;
+		console::error(e, "UserLogic");
 	}
 }
 
-void userlogic::call(std::string method)
+void userlogic::waitForWork()
 {
-	while (!LuaRun)
+	if (isWorking)
+		return;
+
+	while (!isWorking)
 	{
-		Sleep(100);
-	}
-	try {
-		luabridge::LuaRef func = luabridge::getGlobal(LuaScript, method.c_str());
-		if (func.isFunction())
-			func();
-	}
-	catch (luabridge::LuaException const& e) {
-		userlogic::logError(e);
+		Sleep(500);
 	}
 }
 
 void userlogic::callEvent(std::string method, events::caller *ev)
 {
-	while (!LuaRun)
-	{
-		Sleep(100);
-	}
-	lua_State* state = lua_newthread(LuaScript);
+	workedThreads++;
+	waitForWork();
+	luabridge::lua_State *state = lua_newthread(LuaScript);
 	try {
 		luabridge::LuaRef func = luabridge::getGlobal(state, method.c_str());
 		if (func.isFunction())
+		{
 			func(ev);
-		delete ev;
+			lua_gc(state, LUA_GCCOLLECT, 0);
+		}
+		else
+			console::error(method + " is not function", "CallEvent");
 	}
 	catch (luabridge::LuaException const& e) {
-		userlogic::logError(e);
+		logError(e);
 	}
+	delete ev;
+	workedThreads--;
 }
 
-void userlogic::free() {
-	LuaRun = false;
+void userlogic::free() 
+{
+	loadedModules = 0;
+	isCrash = false;
+	isWorking = false;
+
 	lua_close(LuaScript);
 }
 
-void userlogic::logError(luabridge::LuaException error) {
+void userlogic::logError(luabridge::LuaException error) 
+{
 	console::error(error.what(), "Lua");
 }
 
 std::string userlogic::c_relua(std::vector<std::string> cmd_args)
 {
-	userlogic::free();
-	userlogic::start();
+	if (isWorking == false && isCrash ==false)
+	{
+		console::error("Please, wait. Your scripts will start", "relua");
+		return "Please, wait. Your scripts will start";
+	}
+	isWorking = false;
+	if (workedThreads != 0)
+	{
+		
+		console::log("Wait threads...", "relua");
+		while (workedThreads != 0)
+		{
+			Sleep(1000);
+		}
+	}
+	free();
+	start();
 	return "UserLogic reloaded";
 }

@@ -22,6 +22,7 @@ namespace eapi
 	string c_getUpdates(args cmd_args);
 	string c_updateAll(args cmd_args);
 	string c_update(args cmd_args);
+	string c_reinstall(args cmd_args);
 	string c_install(args cmd_args);
 	string c_apply(args cmd_args);
 	void install(eapi::element *el);

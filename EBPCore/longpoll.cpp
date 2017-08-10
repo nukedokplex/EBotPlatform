@@ -4,6 +4,7 @@
 #include "events.h"
 #include "vkwork.h"
 #include "longpoll.h"
+#include <windows.h> // Sleep
 
 using namespace longpoll;
 
@@ -41,6 +42,7 @@ void longpoll::startLoop()
 {
 	while (true)
 	{
+		Sleep(50);
 		loop();
 	}
 }
@@ -100,10 +102,12 @@ void longpoll::loop() {
 	catch (string e)
 	{// String errors
 		console::error("Error ("+e+"), reconnect...", "LongPoll");
+		Sleep(100);
 	}
 	catch (...) 
 	{// Unknown errors
 		console::error("Unknown error, reconnect...", "LongPoll");
+		Sleep(1000);
 	}
 }
 

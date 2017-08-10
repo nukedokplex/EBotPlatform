@@ -18,8 +18,9 @@ std::string other::c_title(std::vector<std::string> cmd_args)
 	return "New title is \"" + cmd_args[1] + "\"";
 }
 
-std::string other::getVersionName() {
-	return VERSION;
+std::string other::getVersionName() 
+{
+	return "0.5.6";
 }
 
 string other::getCurrentTime()

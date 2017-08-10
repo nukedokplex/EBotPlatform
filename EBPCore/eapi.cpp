@@ -21,6 +21,7 @@ void eapi::init()
 	cmd::add("update_all", eapi::c_updateAll, "Update all elements");
 	cmd::add("update", eapi::c_update, "Update element");
 	cmd::add("install", eapi::c_install, "Install element");
+	cmd::add("reinstall", eapi::c_reinstall, "Reinstall element");
 	cmd::add("apply", eapi::c_apply, "Apply core updates");
 }
 
@@ -43,6 +44,9 @@ void eapi::start()
 		Host_End();
 	}
 	eapi::load();
+
+	// Clear clons
+
 	console::log(c_getUpdates(args()), "EAPI");
 }
 
@@ -156,21 +160,61 @@ string eapi::c_install(args cmd_args)
 	}
 }
 
+//	Reinstall element
+string eapi::c_reinstall(args cmd_args)
+{
+	string el_name = cmd_args[1];
+
+	net::request get = net::request(eapi::base_url + "get.php");
+	get.set("name", el_name);
+	json response = json::parse(get.send());
+	if (int i = eapi::getElement(el_name) != -1)
+	{
+		if (response.at("status") == "ok")
+		{
+			string filename = response.at("element").at("filename");
+			string url = response.at("element").at("url");
+			string version = response.at("element").at("version");
+			int flags = response.at("element").at("flags");
+
+			element el = element();
+			el.file = filename;
+			el.server = url;
+			el.name = el_name;
+			el.version = version;
+			el.flags = flags;
+			elements[i] = el;
+			eapi::save();
+
+			eapi::install(&el);
+			return "Element has been reinstalled\nVersion: " + el.version;
+		}
+		else {
+			console::error("Element not found", "EAPI");
+			return "Element not found";
+		}
+	}
+	else {
+		console::error("Element not installed", "EAPI");
+		return "Element not installed";
+	}
+}
+
 //	Apply core updates
 string eapi::c_apply(args cmd_args)
 {
 	if (updateReloads.size()!=0)
 	{
 		fs::file *updatesFile = fs::openOrCreate("update.bat", false, 4);
-		updatesFile->write("@echo off\n");
-		
+
 		for (int i = 0; i < updateReloads.size(); i++)
 		{
 			updatesFile->write("move " + updateReloads[i] + ".update " + updateReloads[i] + "\n");
 		}
-
+		
 		updatesFile->write("start EBPLauncher.exe\n");
-		updatesFile->write("del /q update.bat");
+		updatesFile->write("del /q update.bat\n");
+		updatesFile->write("exit");
 		updatesFile->close();
 		system("start update.bat");
 		exit(0);
@@ -217,7 +261,7 @@ void eapi::install(eapi::element *el)
 		console::log("Enter apply for the changes to take effect. (It restart program!)", "EAPI");
 	}
 	else {// USER
-		fs::writeData(path, file_data.send());
+		file_data.download(path);
 	}
 	console::log("Downloaded: " + el->name, "EAPI");
 }

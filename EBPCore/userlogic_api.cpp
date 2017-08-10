@@ -33,6 +33,7 @@ void userlogic::api::registerApi()
 		.addFunction("exists", cmd::exists)
 		.addFunction("exe", cmd::exe)
 		.addFunction("parse", userlogic::api::cmd_ParseArgs)
+		.addFunction("data", userlogic::api::cmd_data)
 	.endNamespace();
 
 	// Consoló
@@ -137,12 +138,32 @@ void userlogic::api::connectModule(std::string text)
 {
 	luabridge::LuaRef r = userlogic::api::connect("scripts/modules/"+text);
 	luabridge::setGlobal(LuaScript, r, text.c_str());
+	userlogic::loadedModules++;
 }
 
-luabridge::LuaRef userlogic::api::cmd_ParseArgs(std::string text) {
-	std::vector<std::string> or = cmd::parse(text);
+luabridge::LuaRef userlogic::api::argsToTable(args c_args) 
+{
 	luabridge::LuaRef r = luabridge::newTable(LuaScript);
-	for (int i = 0;i < or.size();i++)
-		r[i+1] = (std::string)or[i];
+	for (int i = 0;i < c_args.size();i++)
+		r[i + 1] = (std::string) c_args[i];
 	return r;
+}
+
+args userlogic::api::tableToArgs(luabridge::LuaRef table)
+{
+	args r;
+	for (int i = 0;i < table.length();i++)
+		r.push_back(table[i+1].cast<string>());
+	return r;
+}
+
+luabridge::LuaRef userlogic::api::cmd_ParseArgs(std::string text) 
+{
+	return userlogic::api::argsToTable(cmd::parse(text));
+}
+
+// Lua style
+string userlogic::api::cmd_data(luabridge::LuaRef cmd_args, int sub)
+{
+	return cmd::data(userlogic::api::tableToArgs(cmd_args), sub);
 }

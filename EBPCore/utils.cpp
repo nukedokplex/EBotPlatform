@@ -1,6 +1,5 @@
 #include <regex>
-#include <ctime>
-
+#include <random>
 #include "utils.h"
 
 using namespace std;
@@ -24,9 +23,11 @@ int Flags_RemoveFlag(int flags, int flag) {
 }
 
 // RANDOM
+mt19937_64 mersenne;
+
 void utils::random::init()
 {
-	srand(time(0));
+	mersenne.seed(time(0));
 }
 
 int utils::random::get(int min, int max) {
@@ -34,8 +35,10 @@ int utils::random::get(int min, int max) {
 		min *= -1;
 		max *= -1;
 	}
-	srand(time(0));
-	return min + rand() % (max - min);
+	if (min == max) return min;
+
+	std::uniform_int_distribution<> uid(min, max);
+	return uid(mersenne);
 }
 
 // REGULAR
