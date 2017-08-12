@@ -6,7 +6,6 @@
 #include "cvar.h"
 #include "filesystem.h"
 #include "other.h"
-#include <LuaBridge.h>
 
 using namespace cmd;
 
@@ -47,7 +46,7 @@ void cmd::add(const std::string cmd_name, func function, const std::string cmd_d
 	command	cmd;
 	if (cvar::exists(cmd_name))
 	{
-		console::log(cmd_name+" already defined as a ñvar", "Core:cmd::add");
+		console::log(cmd_name+" already defined as a Ã±var", "Core:cmd::add");
 		return;
 	}
 	if (exists(cmd_name))
