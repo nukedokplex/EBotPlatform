@@ -2,6 +2,7 @@
 #include "other.h"
 #include "filesystem.h"
 #include "ebp_api.h"
+#include "cvar.h"
 #include "console.h"
 
 using namespace console;
@@ -34,4 +35,10 @@ void console::log(std::string text, std::string type)
 void console::error(std::string text, std::string type) 
 {
 	console::log(text, "{4}"+type+":ERROR");
+}
+
+void console::debug(string text, string type, string cvar_name)
+{
+	if (cvar::get(cvar_name) == "1")
+		console::log(text, type);
 }

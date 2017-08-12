@@ -11,6 +11,7 @@
 #include "events.h"
 #include "utils.h"
 #include "other.h"
+#include <unordered_map>
 // --
 #include <LuaBridge.h>
 
@@ -80,6 +81,7 @@ void userlogic::api::registerApi()
 	luabridge::getGlobalNamespace(LuaScript)
 		.beginNamespace("vk")
 		.addFunction("getToken", vk::getToken)
+		.addFunction("send", userlogic::api::simplevksend)
 		.beginClass <vk::request>("request")
 			.addConstructor <void(*) (string, bool)>()
 			.addConstructor <void(*) (string)>()
@@ -117,7 +119,8 @@ void userlogic::api::registerApi()
 		.addFunction("changeCharset", Charset_Change)
 		.addFunction("getVersionName", other::getVersionName)
 		.addFunction("connect", userlogic::api::connect)
-		.addFunction("connectModule", userlogic::api::connectModule);
+		.addFunction("connectModule", userlogic::api::connectModule)
+		.addFunction("print", userlogic::api::print);
 
 	// Connect default modules
 	luabridge::setGlobal(LuaScript, luabridge::getGlobal(LuaScript, "require")("data/lua/json"), "JSON");
@@ -141,6 +144,12 @@ void userlogic::api::connectModule(std::string text)
 	userlogic::loadedModules++;
 }
 
+// UTF8 print
+void userlogic::api::print(std::string text)
+{
+	api_output.writeline(text+"\n");
+}
+
 luabridge::LuaRef userlogic::api::argsToTable(args c_args) 
 {
 	luabridge::LuaRef r = luabridge::newTable(LuaScript);
@@ -157,6 +166,38 @@ args userlogic::api::tableToArgs(luabridge::LuaRef table)
 	return r;
 }
 
+std::unordered_map<std::string, luabridge::LuaRef> getKeyValueMap(const luabridge::LuaRef& table)
+{
+	using namespace luabridge;
+	std::unordered_map<std::string, LuaRef> result;
+	if (table.isNil()) { return result; }
+
+	auto L = table.state();
+	push(L, table); // push table
+
+	lua_pushnil(L);  // push nil, so lua_next removes it from stack and puts (k, v) on stack
+	while (lua_next(L, -2) != 0) { // -2, because we have table at -1
+		if (lua_isstring(L, -2)) { // only store stuff with string keys
+			result.emplace(lua_tostring(L, -2), LuaRef::fromStack(L, -1));
+		}
+		lua_pop(L, 1); // remove value, keep key for lua_next
+	}
+
+	lua_pop(L, 1); // pop table
+	return result;
+}
+
+map<string, string> userlogic::api::tableToMap(luabridge::LuaRef table)
+{
+	map<string, string> r;
+	for (auto& pair : getKeyValueMap(table)) {
+		auto& key = pair.first;
+		auto& value = pair.second;
+		r[key] = value.cast<string>();
+	}
+	return r;
+}
+
 luabridge::LuaRef userlogic::api::cmd_ParseArgs(std::string text) 
 {
 	return userlogic::api::argsToTable(cmd::parse(text));
@@ -166,4 +207,9 @@ luabridge::LuaRef userlogic::api::cmd_ParseArgs(std::string text)
 string userlogic::api::cmd_data(luabridge::LuaRef cmd_args, int sub)
 {
 	return cmd::data(userlogic::api::tableToArgs(cmd_args), sub);
+}
+
+string userlogic::api::simplevksend(string method, luabridge::LuaRef params, bool sendtoken)
+{
+	return vk::send(method, userlogic::api::tableToMap(params), sendtoken);
 }

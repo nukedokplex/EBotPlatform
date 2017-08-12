@@ -16,7 +16,8 @@
 
 inputApi api_input = {
 	console::log,
-	cmd::exe
+	cmd::exe,
+	Host_Start
 };
 outputApi api_output;
 
@@ -35,17 +36,18 @@ inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 	utils::init();
 	userlogic::init();
 	mysql::utils::init();
+	atexit(Host_Shutdown);
+	return api_input;
+}
 
+int Host_Start()
+{
 	cmd::exec("config.cfg");
-
 	eapi::start();
 	mysql::utils::start();
 	userlogic::start();
 	longpoll::start();
-
-
-	atexit(Host_Shutdown);
-	return api_input;
+	return 0;
 }
 
 void Host_End()

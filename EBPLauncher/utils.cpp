@@ -8,18 +8,37 @@
 #include <locale>
 #include <windows.h> 
 #include "../EBPCore/utf8\utf8.h"
+#include <vector>
 
 using namespace std;
 
 extern void WriteConsoleLine(std::string text);
 void SetWindowTitle(std::string text);
+void SafeWriteConsoleLine(std::string text);
 
 inputApi api_input;
 outputApi api_output = {
-	WriteConsoleLine,
+	SafeWriteConsoleLine,
 	SetWindowTitle
 };
 string Utf8_to_cp1251(const char *str);
+
+vector<string> linesStack; // Fix console conflicts
+
+bool addlock = false;
+void SafeWriteConsoleLine(std::string text)
+{
+	if (!addlock) {
+		addlock = true;
+		WriteConsoleLine(text);
+		addlock = false;
+	}
+	else
+	{
+		Sleep(5);
+		SafeWriteConsoleLine(text);
+	}
+}
 
 void SetColor(int text, int background)
 {

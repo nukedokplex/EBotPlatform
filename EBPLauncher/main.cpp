@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstdlib> // для system
 #include "../EBPCore/ebp_api.h"
+#include <thread>
 
 #define BOT_PATH	"bot"	// default dir to start from
 
@@ -26,6 +27,7 @@ void Sys_UnloadEngine(void)
 	if (Host_Shutdown) Host_Shutdown();
 	if (hEngine) FreeLibrary(hEngine);
 }
+
 void instructionLoop();
 int main()
 {
@@ -34,6 +36,7 @@ int main()
 	Sys_LoadEBP();
 	api_input = Host_Main(BOT_PATH, api_output);
 	api_input.Console_Log("Starting instructionLoop()...", "Launcher");
-	instructionLoop();
-	return 0;
+	std::thread iloop(instructionLoop);
+	iloop.detach();
+	return api_input.Host_Start();
 }

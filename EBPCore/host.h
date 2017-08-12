@@ -6,5 +6,6 @@
 
 extern "C" {
 	inputApi EXPORT Host_Main(const std::string botdir, outputApi api);
+	int Host_Start();
 	void EXPORT Host_Shutdown(void);
 }

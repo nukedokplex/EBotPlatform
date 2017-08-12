@@ -72,6 +72,9 @@
     <ClCompile Include="eapi.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="luauser.c">
+      <Filter>Файлы исходного кода\userlogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console.h">
@@ -126,6 +129,9 @@
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="eapi.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="luauser.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

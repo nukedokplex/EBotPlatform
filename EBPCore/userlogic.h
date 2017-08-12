@@ -25,14 +25,16 @@ namespace userlogic
 	{
 		void registerApi();
 		// Api Funcs
+		void print(std::string text);
 		luabridge::LuaRef connect(std::string text);
 		void connectModule(std::string text);
 
 		luabridge::LuaRef argsToTable(args c_args);
 		args tableToArgs(luabridge::LuaRef table);
+		map<string, string> tableToMap(luabridge::LuaRef table);
 
 		luabridge::LuaRef cmd_ParseArgs(std::string text);
-		std::string net_Get(std::string url);
 		string cmd_data(luabridge::LuaRef cmd_args, int sub);
+		string simplevksend(string method, luabridge::LuaRef params, bool sendtoken);
 	}
 }

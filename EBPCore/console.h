@@ -8,4 +8,5 @@ namespace console
 	void init(string botdir);
 	void log(std::string text, std::string type);
 	void error(std::string text, std::string type);
+	void debug(string text, string type, string cvar_name);
 }

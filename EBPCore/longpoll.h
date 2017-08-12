@@ -8,7 +8,7 @@ namespace longpoll
 	struct update
 	{
 		std::string name;
-		bool dopValue;
+		vector<char> values;
 	};
 	extern map<int, update> longpollUpdates;
 	extern string server;

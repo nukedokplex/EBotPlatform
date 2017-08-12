@@ -1,6 +1,7 @@
 #include <thread>
 #include "events.h"
 #include "userlogic.h"
+#include "console.h"
 
 map<string, string> events::events;
 
@@ -8,28 +9,28 @@ map<string, string> events::events;
 
 void events::caller::pushString(string value)
 {
-	this->stack.push_back((void*)value.c_str());
+	this->stack.push_back(value);
 }
 
 void events::caller::pushInt(int value)
 {
-	this->stack.push_back((void*)value);
+	this->stack.push_back(to_string(value));
 }
 
 // Get
 
-std::string events::caller::getString()
+string events::caller::getString()
 {
-	void *value = this->stack[this->stack_pos];
+	string value = this->stack[this->stack_pos];
 	this->stack_pos++;
-	return (std::string)(char*)value;
+	return value;
 }
 
 int events::caller::getInt()
 {
-	void *value = this->stack[this->stack_pos];
+	string value = this->stack[this->stack_pos];
 	this->stack_pos++;
-	return (int)value;
+	return stoi(value);
 }
 
 // Work

@@ -26,6 +26,7 @@ void userlogic::init()
 {
 	cmd::add("relua", c_relua, "Reload UserLogic");
 	cvar::add("dll_path", "scripts/main.lua", "Path to DLL");
+	cvar::add("ul_debug_calls", "0", "Debug event calls");
 }
 
 void userlogic::start() 
@@ -82,15 +83,15 @@ void userlogic::waitForWork()
 
 void userlogic::callEvent(std::string method, events::caller *ev)
 {
-	workedThreads++;
 	waitForWork();
+	workedThreads++;
+	console::debug("Start "+method+"(event) method. LT: "+to_string(workedThreads), "CallEventLua", "ul_debug_calls");
 	luabridge::lua_State *state = lua_newthread(LuaScript);
 	try {
 		luabridge::LuaRef func = luabridge::getGlobal(state, method.c_str());
 		if (func.isFunction())
 		{
 			func(ev);
-			lua_gc(state, LUA_GCCOLLECT, 0);
 		}
 		else
 			console::error(method + " is not function", "CallEvent");
@@ -100,6 +101,7 @@ void userlogic::callEvent(std::string method, events::caller *ev)
 	}
 	delete ev;
 	workedThreads--;
+	console::debug("End " + method + "(event) method. LT: " + to_string(workedThreads), "CallEventLua", "ul_debug_calls");
 }
 
 void userlogic::free() 
@@ -111,7 +113,7 @@ void userlogic::free()
 	lua_close(LuaScript);
 }
 
-void userlogic::logError(luabridge::LuaException error) 
+void userlogic::logError(luabridge::LuaException error, luabridge::lua_State *state)
 {
 	console::error(error.what(), "Lua");
 }

@@ -5,7 +5,7 @@ typedef struct
 {
 	void(*Console_Log)(std::string text, std::string type);
 	std::string(*Console_ExeCommand)(std::string commandline);
-	
+	int (*Host_Start)();
 } inputApi; //Launcher -> EBP
 
 typedef struct

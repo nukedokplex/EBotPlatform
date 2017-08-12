@@ -14,6 +14,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		EvaBot|x64 = EvaBot|x64
+		EvaBot|x86 = EvaBot|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -22,6 +24,10 @@ Global
 		{B83BDB9A-9B4B-4166-9DDE-9F0D2B349184}.Debug|x64.Build.0 = Debug|x64
 		{B83BDB9A-9B4B-4166-9DDE-9F0D2B349184}.Debug|x86.ActiveCfg = Debug|Win32
 		{B83BDB9A-9B4B-4166-9DDE-9F0D2B349184}.Debug|x86.Build.0 = Debug|Win32
+		{B83BDB9A-9B4B-4166-9DDE-9F0D2B349184}.EvaBot|x64.ActiveCfg = EvaBot|x64
+		{B83BDB9A-9B4B-4166-9DDE-9F0D2B349184}.EvaBot|x64.Build.0 = EvaBot|x64
+		{B83BDB9A-9B4B-4166-9DDE-9F0D2B349184}.EvaBot|x86.ActiveCfg = EvaBot|Win32
+		{B83BDB9A-9B4B-4166-9DDE-9F0D2B349184}.EvaBot|x86.Build.0 = EvaBot|Win32
 		{B83BDB9A-9B4B-4166-9DDE-9F0D2B349184}.Release|x64.ActiveCfg = Release|x64
 		{B83BDB9A-9B4B-4166-9DDE-9F0D2B349184}.Release|x64.Build.0 = Release|x64
 		{B83BDB9A-9B4B-4166-9DDE-9F0D2B349184}.Release|x86.ActiveCfg = Release|Win32
@@ -30,6 +36,10 @@ Global
 		{1517BE69-2BB8-4E18-9DDB-BEC44159CCE6}.Debug|x64.Build.0 = Debug|x64
 		{1517BE69-2BB8-4E18-9DDB-BEC44159CCE6}.Debug|x86.ActiveCfg = Debug|Win32
 		{1517BE69-2BB8-4E18-9DDB-BEC44159CCE6}.Debug|x86.Build.0 = Debug|Win32
+		{1517BE69-2BB8-4E18-9DDB-BEC44159CCE6}.EvaBot|x64.ActiveCfg = EvaBot|x64
+		{1517BE69-2BB8-4E18-9DDB-BEC44159CCE6}.EvaBot|x64.Build.0 = EvaBot|x64
+		{1517BE69-2BB8-4E18-9DDB-BEC44159CCE6}.EvaBot|x86.ActiveCfg = EvaBot|Win32
+		{1517BE69-2BB8-4E18-9DDB-BEC44159CCE6}.EvaBot|x86.Build.0 = EvaBot|Win32
 		{1517BE69-2BB8-4E18-9DDB-BEC44159CCE6}.Release|x64.ActiveCfg = Release|x64
 		{1517BE69-2BB8-4E18-9DDB-BEC44159CCE6}.Release|x64.Build.0 = Release|x64
 		{1517BE69-2BB8-4E18-9DDB-BEC44159CCE6}.Release|x86.ActiveCfg = Release|Win32

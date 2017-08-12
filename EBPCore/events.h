@@ -7,13 +7,13 @@ namespace events
 	{
 	private:
 		string name;
-		vector<void*> stack;
+		vector<string> stack;
 		int stack_pos;
 	public:
 		caller(string name)
 		{
 			this->name = name;
-			this->stack = vector<void*>();
+			this->stack = vector<string>();
 			this->stack_pos = 0;
 		}
 		// Push
