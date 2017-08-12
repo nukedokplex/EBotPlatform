@@ -113,7 +113,7 @@ void userlogic::free()
 	lua_close(LuaScript);
 }
 
-void userlogic::logError(luabridge::LuaException error, luabridge::lua_State *state)
+void userlogic::logError(luabridge::LuaException error)
 {
 	console::error(error.what(), "Lua");
 }
