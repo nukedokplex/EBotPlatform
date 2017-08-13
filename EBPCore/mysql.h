@@ -1,5 +1,5 @@
 #pragma once
-#include <_mysql.h>
+#include <mysql/mysql.h>
 
 namespace mysql
 {

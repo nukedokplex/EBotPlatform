@@ -1,5 +1,10 @@
-﻿#include "utf8\utf8.h" // utf8::find_invalid
-#include <windows.h> // MultiByteToWideChar
+﻿#ifdef __linux__ 
+	#include "utf8/utf8.h" // utf8::find_invalid
+	#include "iconvlite.h"
+#elif _WIN32
+	#include "utf8\utf8.h" // utf8::find_invalid
+	#include <windows.h> // MultiByteToWideChar
+#endif
 
 using namespace std;
 
@@ -16,6 +21,7 @@ bool Charset_IsUTF8(const char *str)
 string Charset_Change(string str, int from, int to)
 {
 	string res;
+	#ifdef _WIN32 
 	int result_u, result_c;
 
 	result_u = MultiByteToWideChar(from, 0, str.c_str(), -1, 0, 0);
@@ -44,4 +50,8 @@ string Charset_Change(string str, int from, int to)
 	res.append(cres);
 	delete[] cres;
 	return res;
+	#elif __linux__ 
+	convert_utf8_to_windows1251(str, res);
+	return res;
+	#endif
 }

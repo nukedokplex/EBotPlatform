@@ -53,7 +53,7 @@ fs::file *fs::open(std::string path, bool inBotFolder, int flags)
 		(flags & 2 ? ios::in : 0) | // 2 - Read
 		(flags & 4 ? ios::out : 0) | // 4 - Write
 		(flags & 8 ? ios::binary : 0);  // 8 - Binary
-	_file->_stream.open(path, _flags);
+	_file->_stream.open(path, (std::ios_base::openmode)_flags);
 	return _file;
 }
 

@@ -1,18 +1,30 @@
 #include "common.h"
-#include "userlogic.h"
 #include "console.h" // console::log; console::error
 #include "cmd.h" // cmd::add
 #include "cvar.h" // cvar::add
 #include "events.h" // events::caller
-#include <windows.h> // Sleep
+#include "userlogic.h"
+#ifdef __linux__ 
+	#include "sleep.h"
+#elif _WIN32
+	#include <windows.h> // Sleep
+#endif
 #include <LuaBridge.h>
 #include "utils.h"
 
-extern "C" {
-# include "lua.h"
-# include "lauxlib.h"
-# include "lualib.h"
-}
+#ifdef __linux__ 
+	extern "C" {
+	# include "lua5.3/lua.h"
+	# include "lua5.3/lauxlib.h"
+	# include "lua5.3/lualib.h"
+	}
+#elif _WIN32
+	extern "C" {
+	# include "lua.h"
+	# include "lauxlib.h"
+	# include "lualib.h"
+	}
+#endif
 
 using namespace userlogic;
 
