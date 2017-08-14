@@ -4,7 +4,11 @@
 #include "events.h"
 #include "vkwork.h"
 #include "longpoll.h"
-#include <windows.h> // Sleep
+#ifdef __linux__ 
+	#include "sleep.h"
+#elif _WIN32
+	#include <windows.h> // Sleep
+#endif
 
 using namespace longpoll;
 

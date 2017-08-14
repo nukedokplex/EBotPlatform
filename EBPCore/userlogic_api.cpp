@@ -15,11 +15,19 @@
 // --
 #include <LuaBridge.h>
 
-extern "C" {
-# include "lua.h"
-# include "lauxlib.h"
-# include "lualib.h"
-}
+#ifdef __linux__ 
+	extern "C" {
+	# include "lua5.3/lua.h"
+	# include "lua5.3/lauxlib.h"
+	# include "lua5.3/lualib.h"
+	}
+#elif _WIN32
+	extern "C" {
+	# include "lua.h"
+	# include "lauxlib.h"
+	# include "lualib.h"
+	}
+#endif
 
 extern luabridge::lua_State* LuaScript;
 

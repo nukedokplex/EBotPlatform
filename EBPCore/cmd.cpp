@@ -1,5 +1,6 @@
 #include <map>
 #include <vector>
+#include <cstring>
 #include "cmd.h"
 #include "common.h"
 #include "console.h"

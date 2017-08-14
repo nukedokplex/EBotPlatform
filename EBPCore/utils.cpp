@@ -44,6 +44,11 @@ int utils::random::get(int min, int max) {
 // REGULAR
 std::string utils::regular::replace(std::string text, std::string pattern, std::string to)
 {
+#ifdef __linux__ 
+	std::regex rx(pattern);
+	return std::regex_replace(text, rx, to);
+#elif _WIN32
 	std::tr1::regex rx(pattern);
 	return std::tr1::regex_replace(text, rx, to);
+#endif
 }
