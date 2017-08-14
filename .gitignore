@@ -1,4 +1,3 @@
-
 *.ipch
 *.db
 *.db-shm
@@ -22,9 +21,7 @@ EBPLauncher/RCd06680
 EBPLauncher/RCb06680
 EBPLauncher/RCe06680
 EBPLauncher/RCf06680
-<<<<<<< HEAD
 .vs/EBotPlatform/v15/.suo
-=======
 LuaBridge
-iconv-lite
->>>>>>> 6bd7fd6acac106d84dcc7f76117173deb4df98a5
+*.so
+*.a
