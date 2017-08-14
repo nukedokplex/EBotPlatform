@@ -1,4 +1,4 @@
-CC=g++ -g
+CC=g++
 CFLAGS=-c -std=c++11 -fPIC
 LDFLAGS=-llua5.3 -lcurl -lmysqlclient -lpthread -shared
 INCLUDES= -I $(PWD)/LuaBridge/Source/LuaBridge
