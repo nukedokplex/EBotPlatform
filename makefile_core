@@ -1,10 +1,10 @@
 CC=g++ -g
-CFLAGS=-c -std=c++11 -Wall -fPIC
+CFLAGS=-c -std=c++11 -fPIC
 LDFLAGS=-llua5.3 -lcurl -lmysqlclient -lpthread -shared
 INCLUDES= -I $(PWD)/LuaBridge/Source/LuaBridge
 SOURCES= EBPCore/cmd.cpp EBPCore/console.cpp EBPCore/cvar.cpp EBPCore/eapi.cpp EBPCore/events.cpp EBPCore/filesystem.cpp EBPCore/host.cpp EBPCore/inetwork.cpp EBPCore/longpoll.cpp EBPCore/mysql.cpp EBPCore/other.cpp EBPCore/string_utils.cpp EBPCore/userlogic.cpp EBPCore/userlogic_api.cpp EBPCore/utils.cpp EBPCore/vkwork.cpp EBPCore/sleep.cpp EBPCore/charsets.cpp
 OBJECTS=$(SOURCES:.cpp=.o) 
-EXECUTABLE=EPBPcore
+EXECUTABLE=EPBCore
 
 all: $(SOURCES) $(EXECUTABLE) 
 
