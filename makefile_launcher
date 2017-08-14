@@ -1,6 +1,6 @@
-CC=g++
+CC=g++ -g
 CFLAGS=-c -std=c++11
-LDFLAGS=-L. -lEBPCore -lpthread -Wl,-rpath,.
+LDFLAGS=-L. -lEBPCore -lpthread -ldl -Wl,-rpath,.
 INCLUDES= -IEBPCore
 SOURCES= EBPLauncher/main.cpp EBPLauncher/utils.cpp
 OBJECTS=$(SOURCES:.cpp=.o) 

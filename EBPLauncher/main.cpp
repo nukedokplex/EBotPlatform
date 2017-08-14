@@ -3,7 +3,6 @@
 	#include <iostream>
 	#include <cstdlib> // для system
 	#include "ebp_api.h"
-	#include "host.h"
 	#include <thread>
 #elif _WIN32
 	#include <windows.h>
@@ -12,33 +11,42 @@
 	#include <cstdlib> // для system
 	#include "../EBPCore/ebp_api.h"
 	#include <thread>
-	
-	typedef inputApi(*pfnInit)(const std::string botname, outputApi api);
+#endif
+
+#ifdef __unix__ 
+	#include <dlfcn.h> 
+	#include <errno.h> 
+	#define CORELIB "libEBPCore.so" 
+	#define dlmount(x) dlopen(x, RTLD_NOW) 
+	#define HINSTANCE void* 
+#elif _WIN32 
+	#define dlmount(x) LoadLibraryA(x) 
+	#define dlclose(x) FreeLibrary(x) 
+	#define dlsym(x,y) GetProcAddress(x,y) 	
+	#define CORELIB "EBPCore.dll" 
+#endif
+
+typedef inputApi(*pfnInit)(const std::string botname, outputApi api);
 	typedef void(*pfnShutdown)(void);
 
 	pfnInit Host_Main;
 	pfnShutdown Host_Shutdown;
 	HINSTANCE	hEngine;
-#endif
 
 #define BOT_PATH	"bot"	// default dir to start from
 
 void Sys_LoadEBP(void)
 {
-	#ifdef _WIN32
-	hEngine = LoadLibrary("EBPCore.dll");
-	Host_Main = (pfnInit)GetProcAddress(hEngine, "Host_Main");
-	Host_Shutdown = (pfnShutdown)GetProcAddress(hEngine, "Host_Shutdown");
+	hEngine = dlmount("CORELIB");
+	Host_Main = (pfnInit)dlsym(hEngine, "Host_Main");
+	Host_Shutdown = (pfnShutdown)dlsym(hEngine, "Host_Shutdown");
 	api_output.writeline("{8}EBPCore.dll has been loaded\n");
-	#endif
 }
 
 void Sys_UnloadEngine(void)
 {
 	if (Host_Shutdown) Host_Shutdown();
-	#ifdef _WIN32
-	if (hEngine) FreeLibrary(hEngine);
-	#endif
+	if (hEngine) dlclose(hEngine);
 }
 
 void instructionLoop();
