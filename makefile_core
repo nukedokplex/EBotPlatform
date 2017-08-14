@@ -4,13 +4,14 @@ LDFLAGS=-llua5.3 -lcurl -lmysqlclient -lpthread -shared
 INCLUDES= -I $(PWD)/LuaBridge/Source/LuaBridge
 SOURCES= EBPCore/cmd.cpp EBPCore/console.cpp EBPCore/cvar.cpp EBPCore/eapi.cpp EBPCore/events.cpp EBPCore/filesystem.cpp EBPCore/host.cpp EBPCore/inetwork.cpp EBPCore/longpoll.cpp EBPCore/mysql.cpp EBPCore/other.cpp EBPCore/string_utils.cpp EBPCore/userlogic.cpp EBPCore/userlogic_api.cpp EBPCore/utils.cpp EBPCore/vkwork.cpp EBPCore/sleep.cpp EBPCore/charsets.cpp
 OBJECTS=$(SOURCES:.cpp=.o) 
-EXECUTABLE=EPBCore
+EXECUTABLE=EBPCore
 
 all: $(SOURCES) $(EXECUTABLE) 
 
 $(EXECUTABLE): $(OBJECTS) 
-	ar rc lib$(EXECUTABLE).a $(OBJECTS)
 	$(CC) $(OBJECTS) $(LDFLAGS) -o lib$(EXECUTABLE).so
+	ar rc lib$(EXECUTABLE).a $(OBJECTS)
+	ranlib lib$(EXECUTABLE).a
 
 .cpp.o: 	
 	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@

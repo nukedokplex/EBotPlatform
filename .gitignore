@@ -5,13 +5,12 @@
 *.tlog
 *.obj
 *.opendb
-.vs/EBotPlatform/v15/.suo
+./.vs
 *.pdb
 *.log
 *.lib
 *.exp
 *.idb
-.vs/EBotPlatform/v15/.suo
 *.enc
 *.enc
 *.o
@@ -21,7 +20,7 @@ EBPLauncher/RCd06680
 EBPLauncher/RCb06680
 EBPLauncher/RCe06680
 EBPLauncher/RCf06680
-.vs/EBotPlatform/v15/.suo
 LuaBridge
 *.so
 *.a
+EBP
