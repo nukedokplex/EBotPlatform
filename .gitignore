@@ -5,7 +5,7 @@
 *.tlog
 *.obj
 *.opendb
-./.vs
+*.suo
 *.pdb
 *.log
 *.lib
