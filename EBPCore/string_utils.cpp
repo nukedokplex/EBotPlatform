@@ -4,7 +4,11 @@
 #include "common.h"
 #include "utils.h"
 
-std::locale const utf8("rus");
+#ifdef __linux__ 
+	std::locale const utf8("C");
+#elif _WIN32
+	std::locale const utf8("rus");
+#endif
 
 // Convert UTF-8 byte string to wstring
 std::wstring to_wstring(std::string const& s) {

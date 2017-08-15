@@ -1,4 +1,3 @@
-
 *.ipch
 *.db
 *.db-shm
@@ -6,13 +5,12 @@
 *.tlog
 *.obj
 *.opendb
-.vs/EBotPlatform/v15/.suo
+*.suo
 *.pdb
 *.log
 *.lib
 *.exp
 *.idb
-.vs/EBotPlatform/v15/.suo
 *.enc
 *.enc
 *.o
@@ -22,12 +20,17 @@ EBPLauncher/RCd06680
 EBPLauncher/RCb06680
 EBPLauncher/RCe06680
 EBPLauncher/RCf06680
-<<<<<<< HEAD
-.vs/EBotPlatform/v15/.suo
-=======
 LuaBridge
+<<<<<<< HEAD
 iconv-lite
 >>>>>>> 6bd7fd6acac106d84dcc7f76117173deb4df98a5
 .vs/EBotPlatform/v15/.suo
 EBotPlatform.sln
 EBPCore/EBPCore.vcxproj
+=======
+*.so
+*.a
+EBP
+bot
+data
+>>>>>>> ff4568be9997079a56f767ff4a7fd8c91061d897

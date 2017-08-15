@@ -1,0 +1,17 @@
+CC=g++ -g
+CFLAGS=-c -std=c++11
+LDFLAGS=-L. -lEBPCore -lpthread -ldl -Wl,-rpath,.
+INCLUDES= -IEBPCore
+SOURCES= EBPLauncher/main.cpp EBPLauncher/utils.cpp
+OBJECTS=$(SOURCES:.cpp=.o) 
+EXECUTABLE=EBP
+
+all: $(SOURCES) $(EXECUTABLE) 
+
+$(EXECUTABLE): $(OBJECTS) 
+	$(CC) $(OBJECTS) $(LDFLAGS) -o $(EXECUTABLE)
+
+.cpp.o: 	
+	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
+clean:
+	rm -rf $(OBJECTS) $(EXECUTABLE)
