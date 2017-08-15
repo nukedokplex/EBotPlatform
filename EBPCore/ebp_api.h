@@ -16,3 +16,4 @@ typedef struct
 
 extern inputApi api_input;
 extern outputApi api_output;
+extern bool input;

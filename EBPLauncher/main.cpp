@@ -7,6 +7,8 @@
 #include <cstring>
 #include "../EBPCore/ebp_api.h"
 
+bool input;
+
 #ifdef __linux__ 
 	#include <dlfcn.h> 
 	#include <errno.h> 
@@ -45,8 +47,10 @@ void Sys_UnloadEngine(void)
 }
 
 void instructionLoop();
-int main()
+int main(int argc, char* argv[])
 {
+	if(argc > 1)input = false;
+	else input = true;
 	std::locale::global(std::locale(""));
 	Sys_LoadEBP();
 	api_input = Host_Main(BOT_PATH, api_output);
