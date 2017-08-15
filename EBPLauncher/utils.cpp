@@ -107,11 +107,13 @@ void SetWindowTitle(std::string text) {
 
 void instructionLoop() {
 	std::string buf;
-	std::getline(std::cin, buf);
 	if(input)
 	{
+		std::getline(std::cin, buf);
 		api_input.Console_Log(api_input.Console_ExeCommand(buf), "CMD");
 	}
+	else
+	Sleep(5);
 	instructionLoop();
 }
 
