@@ -30,7 +30,10 @@ void SetWindowTitle(std::string text);
 void SafeWriteConsoleLine(std::string text);
 
 inputApi api_input;
-outputApi api_output;
+outputApi api_output = {
+	SafeWriteConsoleLine,
+	SetWindowTitle
+};
 string Utf8_to_cp1251(const char *str);
 
 vector<string> linesStack; // Fix console conflicts

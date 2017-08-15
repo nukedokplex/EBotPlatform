@@ -49,10 +49,6 @@ int main()
 {
 	std::locale::global(std::locale(""));
 	Sys_LoadEBP();
-	api_output = {
-		SafeWriteConsoleLine,
-		SetWindowTitle
-	};
 	api_input = Host_Main(BOT_PATH, api_output);
 	api_input.Console_Log("Starting instructionLoop()...", "Launcher");
 	std::thread iloop(instructionLoop);
