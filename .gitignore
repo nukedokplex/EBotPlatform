@@ -24,3 +24,5 @@ LuaBridge
 *.so
 *.a
 EBP
+bot
+data

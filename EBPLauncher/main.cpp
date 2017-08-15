@@ -1,32 +1,27 @@
-#ifdef __linux__
-	#include <string>
-	#include <iostream>
-	#include <cstdlib> // для system
-	#include "ebp_api.h"
-	#include <thread>
-#elif _WIN32
-	#include <windows.h>
-	#include <string>
-	#include <iostream>
-	#include <cstdlib> // для system
-	#include "../EBPCore/ebp_api.h"
-	#include <thread>
-#endif
+#include <iostream>
+#include <cstring>
+#include <string>
+#include <iostream>
+#include <cstdlib>
+#include <thread>
+#include <cstring>
+#include "../EBPCore/ebp_api.h"
 
-#ifdef __unix__ 
+#ifdef __linux__ 
 	#include <dlfcn.h> 
 	#include <errno.h> 
 	#define CORELIB "libEBPCore.so" 
 	#define dlmount(x) dlopen(x, RTLD_NOW) 
 	#define HINSTANCE void* 
 #elif _WIN32 
+	#include <windows.h>
 	#define dlmount(x) LoadLibraryA(x) 
 	#define dlclose(x) FreeLibrary(x) 
 	#define dlsym(x,y) GetProcAddress(x,y) 	
 	#define CORELIB "EBPCore.dll" 
 #endif
 
-typedef inputApi(*pfnInit)(const std::string botname, outputApi api);
+	typedef inputApi(*pfnInit)(const std::string botname, outputApi api);
 	typedef void(*pfnShutdown)(void);
 
 	pfnInit Host_Main;
@@ -37,10 +32,10 @@ typedef inputApi(*pfnInit)(const std::string botname, outputApi api);
 
 void Sys_LoadEBP(void)
 {
-	hEngine = dlmount("CORELIB");
+	hEngine = dlmount(CORELIB);
 	Host_Main = (pfnInit)dlsym(hEngine, "Host_Main");
 	Host_Shutdown = (pfnShutdown)dlsym(hEngine, "Host_Shutdown");
-	api_output.writeline("{8}EBPCore.dll has been loaded\n");
+	api_output.writeline((std::string)"{8}"+(std::string)CORELIB+(std::string)" has been loaded\n");
 }
 
 void Sys_UnloadEngine(void)
@@ -53,7 +48,6 @@ void instructionLoop();
 int main()
 {
 	std::locale::global(std::locale(""));
-
 	Sys_LoadEBP();
 	api_input = Host_Main(BOT_PATH, api_output);
 	api_input.Console_Log("Starting instructionLoop()...", "Launcher");

@@ -69,7 +69,6 @@ bool is_number(const char s[])
 
 void WriteConsoleLine(std::string text) 
 {
-	text = Utf8_to_cp1251(text.data());
 	SetColor(7,0);
 	// MY SUPER COLOR PARSING!!!
 	bool write_color = false;

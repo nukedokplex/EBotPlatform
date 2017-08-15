@@ -4,6 +4,7 @@
 #include "ebp_api.h"
 #include "cvar.h"
 #include "console.h"
+#include <iostream>
 
 using namespace console;
 
