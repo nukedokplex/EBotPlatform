@@ -157,7 +157,7 @@ static void cp1251_to_utf8(char *out, const char *in) {
 
 string Utf8_to_cp1251(const char *str)
 {
-	string res;
-	cp1251_to_utf8((char*) &res, str);
+	char res[1024];
+	cp1251_to_utf8(res, str);
 	return res;
 }
