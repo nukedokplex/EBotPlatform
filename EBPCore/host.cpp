@@ -16,15 +16,16 @@
 #include "host.h"
 #include "eapi.h"
 
-inputApi api_input = {
-	console::log,
-	cmd::exe,
-	Host_Start
-};
+inputApi api_input; 
 outputApi api_output;
 
 inputApi EXPORT Host_Main(const std::string botname, outputApi api)
 {
+	api_input = {
+		console::log,
+		cmd::exe,
+		Host_Start
+	};
 	api_output = api;
 	console::init(botname);
 	console::log("Initializing EBotPlatform "+other::getVersionName(), "Core");
